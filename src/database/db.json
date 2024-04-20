@@ -1,0 +1,158 @@
+{
+   "Hotels": [
+      {"title": "Grand Bohemian Hotel",
+       "url": "https://www.marriott.com/en-us/hotels/bhmag-grand-bohemian-hotel-mountain-brook-autograph-collection/overview/?scid=f2ae0541-1279-4f24-b197-a979c79310b0",
+       "description": "Stylish dining room & bar with a rooftop terrace at the Grand Bohemian Hotel Mountain Brook.",
+       "wifi_password": "Bohemian123",
+       "chatBot_key": "chatbot1",
+       "keywords": ["hotel", "stylish", "dining", "rooftop", "terrace"]
+     }
+   ],
+   "restaurants": [
+      {
+      "title": "Habitat Feed and Social",
+       "url": "On Site",
+       "description": "Stylish dining room & bar with a rooftop terrace at the Grand Bohemian Hotel Mountain Brook.",
+       "keywords": [ "stylish", "dining", "rooftop", "terrace"]
+     },
+      {
+      "title": "Bottega",
+       "url": "https://bottegarestaurant.com/",
+       "description": "Intimate restaurant offering refined Italian fare & cocktails amid dark woods & outdoor tables.",
+       "keywords": ["italian", "cocktails", "intimate", "outdoor"]
+     },
+      {
+       "title": "Another Broken Egg Cafe",
+       "url": "https://www.anotherbrokenegg.com/",
+       "description": "Casual chain featuring egg dishes & other breakfast items, plus brunch sandwiches.",
+       "keywords": ["cafe", "casual", "breakfast", "brunch", "sandwiches"]
+     },
+      {
+      "title": "MELT",
+       "url": "https://ilovemelt.com/",
+       "description": "Eatery serving melted cheese sandwiches, fries & local beers in a hip space with reclaimed wood.",
+       "keywords": ["eatery", "cheese", "fries", "beer", "hip"]
+     },
+      {
+      "title": "Char Bar No. 7",
+       "url": "https://charbar7.com/locations/mountain-brook/",
+       "description": "The perfect mix between upscale and casual, CharBar No. 7 offers fresh seafood & chicken dishes, delicious sandwiches along with signature & DIY salads.",
+       "keywords": ["delicious", "upscale", "casual", "seafood", "chicken", "sandwiches", "salads"]
+     },
+      {
+      "title":"Post Office Pies",
+       "url": "https://www.postofficepies.com/",
+       "description": "Wood-fired pizza, pasta, sandwiches, and more with a full bar + TVs.",
+       "keywords": ["pizza", "pasta", "sandwiches", "bar"]
+     },
+      {
+         "title": "Ladybird Taco",
+       "url": "https://www.ladybirdtaco.com/birmingham/",
+       "description": "Breakfast and lunch tacos inspired by the TX taco scene served alongside full barista service.",
+       "keywords": ["tacos", "breakfast", "lunch", "barista"]
+     }
+   ],
+   "drinks": [
+      {
+      "title": "Oteys",
+       "url": "http://www.oteystavern.com/",
+       "description": "Lively pub featuring pub fare & cocktails plus local live music acts in the evenings.",
+       "keywords": [ "pub", "cocktails", "music", "live music", "evenings"]
+     },
+      {
+      "title": "Key Circle Commons",
+       "url": "https://kccbham.com/",
+       "description": "Historic Birmingham 'roundabout' at the top of Red Mountain featuring craft cocktails and live music.",
+       "keywords": ["craft", "historic", "cocktails", "music", "live music"]
+     },
+      {
+       "title": "Carrigan's Public House",
+       "url": "https://www.carrigans.com/",
+       "description": "Airy, industrial spot with a patio & roof deck for upscale pub fare, craft beer & cocktails.",
+       "keywords": ["industrial", "patio", "craft beer", "cocktails"]
+     },
+      {
+      "title": "Vino",
+       "url": "https://vinobirmingham.com/",
+       "description": "Intimate, elegant eatery offering upscale American & Mediterranean fare plus wines.",
+       "keywords": ["intimate", "elegant", "american", "mediterranean", "wine"]
+     },
+      {
+       "title": "Mayawell",
+       "url": "https://www.mayawellbar.com/",
+       "description": "Mayawell explores tequilas and mezcals in its innovative house cocktails. Local craft beer, Mexican beer, and wine are also served.",
+       "keywords": ["tequilas", "mezcal", "mezcals", "cocktails", "beer", "local", "craft beer", "mexican beer", "wine"]
+     }
+   ],
+   "activities": [
+      {
+      "title": "Birmingham Zoo",
+       "url": "https://www.birminghamzoo.com/",
+       "description": "Must-see attraction, with approximately 950 animals of 230 species calling it home.",
+       "keywords": ["zoo", "animals", "attraction", "species", "home"]
+     },
+      {
+        "title":"McWane Science Center",
+       "url": "https://mcwane.org/",
+       "description": "State-of-the-art hands-on science center, aquarium, and 250-seat IMAX Dome Theater",
+       "keywords": ["science", "center", "aquarium", "imax", "theater"]
+     },
+      {
+        "title":"Vulcan Park and Museum",
+       "url": "https://visitvulcan.com/",
+       "description": "Features the largest cast iron statue in the world, and is the city symbol of Birmingham, Alabama, United States, reflecting its roots in the iron and steel industry.",
+       "keywords": ["museum", "statue", "symbol", "iron", "steel"]
+     },
+      {
+      "title": "Barber Motorsports Museum",
+       "url": "https://www.barbermuseum.org/",
+       "description": "Contemporary, glass-enclosed setup for 1,200+ motorcycles & race cars with an adjacent road course.",
+       "keywords": ["museum", "motorcycles", "race cars", "road course", "contemporary"]
+     },
+      {
+      "title": "Sloss Furnaces National Historical Landmark",
+       "url": "https://www.slossfurnaces.com/",
+       "description": "National Historic Landmark and industrial museum in Birmingham, AL and one of the first industrial sites in the U.S. to be preserved and restored for public use.",
+       "keywords": ["landmark", "museum", "industrial", "history", "preserved"]
+     }
+   ],
+   "other": [
+      {
+      "title": "Brombergs",
+       "url": "https://brombergs.com/",
+       "description": "Upscale jewelry store and repair service in Mountain Brook.",
+       "keywords": ["jewelry", "store", "upscale", "repair", "mountain brook"]
+     },
+      {
+      "title":"Leaf & Petal",
+       "url": "https://leafnpetal.com/",
+       "description": "Nearby florist with beautiful flowers and pottery.",
+       "keywords": ["florist", "flowers", "pottery", "nearby", "beautiful"]
+     },
+     {
+      "title": "Mountain Brook Creamery",
+       "url": "https://bhamcreameries.com/",
+       "description": "Straightforward ice cream parlor with specialty sundaes & a modest seating area.",
+       "keywords": ["ice cream", "parlor", "sundaes", "seating", "modest"]
+     },
+      {
+      "title": "A’mano Gifts",
+       "url": "https://www.amanogifts.com/",
+       "description": "Gift shop offering unique offerings for special occasions.",
+       "keywords": ["gifts", "shop", "unique", "special occasions", "offering"]
+     },
+      {
+         "title": "Vitola",
+       "url": "https://www.vitolafinecigars.com/",
+       "description": "Nearby boutique offering premium cigars and accessories.",
+       "keywords": ["boutique", "cigars", "accessories", "premium", "nearby"]
+     },
+      {
+       "title":"Golden Age Wine",
+       "url": "https://www.goldenagewine.com/",
+       "description": "Nearby boutique offering premium wine.",
+       "keywords": ["boutique", "wine", "premium", "nearby"]
+     }
+   ]
+ }
+ 
