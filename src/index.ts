@@ -15,7 +15,7 @@ AppDataSource.initialize().then(async () => {
 
     // create express app
     const app = express();
-    app.use(cors());
+    app.use(cors({ origin: '*' }));
     //  only log error responses
     app.use(morgan('combined', {
         skip: function (req, res) { return res.statusCode < 400 }

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Routes = void 0;
-var BusinessController_1 = require("../controller/BusinessController");
-var UserController_1 = require("../controller/UserController");
-var HotelController_1 = require("../controller/HotelController");
+const BusinessController_1 = require("../controller/BusinessController");
+const UserController_1 = require("../controller/UserController");
+const HotelController_1 = require("../controller/HotelController");
 exports.Routes = [{
         method: "get",
         route: "/users",

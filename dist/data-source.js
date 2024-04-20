@@ -3,13 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppDataSource = void 0;
 require("dotenv/config");
 require("reflect-metadata");
-var typeorm_1 = require("typeorm");
-var User_1 = require("./entity/User");
-var SearchQuery_1 = require("./entity/SearchQuery");
-var Business_1 = require("./entity/Business");
-var Category_1 = require("./entity/Category");
-var Hotel_1 = require("./entity/Hotel");
-var port = Number(process.env.POSTGRES_PORT);
+const typeorm_1 = require("typeorm");
+const User_1 = require("./entity/User");
+const SearchQuery_1 = require("./entity/SearchQuery");
+const Business_1 = require("./entity/Business");
+const Category_1 = require("./entity/Category");
+const Hotel_1 = require("./entity/Hotel");
+const port = Number(process.env.POSTGRES_PORT);
 exports.AppDataSource = new typeorm_1.DataSource({
     type: 'postgres',
     host: process.env.POSTGRES_HOST,
@@ -27,7 +27,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
         rejectUnauthorized: false,
     },
 });
-var ExsampleDataSource = new typeorm_1.DataSource({
+const ExsampleDataSource = new typeorm_1.DataSource({
     type: 'postgres',
     host: process.env.POSTGRES_HOST,
     port: Number(process.env.POSTGRES_PORT),

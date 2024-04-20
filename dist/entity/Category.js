@@ -10,27 +10,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Category = void 0;
-var typeorm_1 = require("typeorm");
-var Business_1 = require("./Business");
-var Category = /** @class */ (function () {
-    function Category() {
-    }
-    __decorate([
-        (0, typeorm_1.PrimaryGeneratedColumn)(),
-        __metadata("design:type", Number)
-    ], Category.prototype, "id", void 0);
-    __decorate([
-        (0, typeorm_1.Column)(),
-        __metadata("design:type", String)
-    ], Category.prototype, "name", void 0);
-    __decorate([
-        (0, typeorm_1.OneToMany)(function () { return Business_1.Business; }, function (business) { return business.category; }),
-        __metadata("design:type", Array)
-    ], Category.prototype, "businesses", void 0);
-    Category = __decorate([
-        (0, typeorm_1.Entity)()
-    ], Category);
-    return Category;
-}());
+const typeorm_1 = require("typeorm");
+const Business_1 = require("./Business");
+let Category = class Category {
+};
+__decorate([
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], Category.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Category.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Business_1.Business, business => business.category),
+    __metadata("design:type", Array)
+], Category.prototype, "businesses", void 0);
+Category = __decorate([
+    (0, typeorm_1.Entity)()
+], Category);
 exports.Category = Category;
 //# sourceMappingURL=Category.js.map

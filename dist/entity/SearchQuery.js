@@ -10,32 +10,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SearchQuery = void 0;
-var typeorm_1 = require("typeorm");
-var Hotel_1 = require("./Hotel");
-var SearchQuery = /** @class */ (function () {
-    function SearchQuery() {
-    }
-    __decorate([
-        (0, typeorm_1.PrimaryGeneratedColumn)(),
-        __metadata("design:type", Number)
-    ], SearchQuery.prototype, "id", void 0);
-    __decorate([
-        (0, typeorm_1.Column)(),
-        __metadata("design:type", String)
-    ], SearchQuery.prototype, "text", void 0);
-    __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return Hotel_1.Hotel; }, function (hotel) { return hotel.searchQueries; }),
-        (0, typeorm_1.JoinColumn)({ name: 'hotelId' }),
-        __metadata("design:type", Hotel_1.Hotel)
-    ], SearchQuery.prototype, "hotel", void 0);
-    __decorate([
-        (0, typeorm_1.Column)({ type: 'timestamp', default: function () { return 'CURRENT_TIMESTAMP'; } }),
-        __metadata("design:type", Date)
-    ], SearchQuery.prototype, "createdAt", void 0);
-    SearchQuery = __decorate([
-        (0, typeorm_1.Entity)('search_query')
-    ], SearchQuery);
-    return SearchQuery;
-}());
+const typeorm_1 = require("typeorm");
+const Hotel_1 = require("./Hotel");
+let SearchQuery = class SearchQuery {
+};
+__decorate([
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], SearchQuery.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], SearchQuery.prototype, "text", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Hotel_1.Hotel, hotel => hotel.searchQueries),
+    (0, typeorm_1.JoinColumn)({ name: 'hotelId' }),
+    __metadata("design:type", Hotel_1.Hotel)
+], SearchQuery.prototype, "hotel", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),
+    __metadata("design:type", Date)
+], SearchQuery.prototype, "createdAt", void 0);
+SearchQuery = __decorate([
+    (0, typeorm_1.Entity)('search_query')
+], SearchQuery);
 exports.SearchQuery = SearchQuery;
 //# sourceMappingURL=SearchQuery.js.map
