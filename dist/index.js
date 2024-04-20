@@ -43,7 +43,7 @@ function handleError(err, req, res, next) {
 data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {
     // create express app
     const app = (0, express_1.default)();
-    app.use((0, cors_1.default)());
+    app.use((0, cors_1.default)({ origin: '*' }));
     //  only log error responses
     app.use((0, morgan_1.default)('combined', {
         skip: function (req, res) { return res.statusCode < 400; }
