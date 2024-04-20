@@ -41,7 +41,7 @@ AppDataSource.initialize().then(async () => {
     // ...
 
     // start express server
-    const port = process.env.API_PORT || 4002;
+    const port = process.env.PORT || 4002;
     app.listen(port);
 
     // insert new users for test
