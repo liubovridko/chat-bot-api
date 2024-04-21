@@ -1,6 +1,7 @@
 import { BusinessController } from "../controller/BusinessController";
 import { UserController } from "../controller/UserController";
 import { HotelController } from "../controller/HotelController";
+import { SearchController } from "../controller/SearchController";
 
 export const Routes = [{
     method: "get",
@@ -37,6 +38,11 @@ export const Routes = [{
     route: "/business/:id",
     controller: BusinessController,
     action: "getOne"
+}, {
+    method: "get",
+    route: "/search",
+    controller: SearchController,
+    action: "searchByKeywords"
 }, {
     method: "post",
     route: "/business",

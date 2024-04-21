@@ -6,11 +6,14 @@ import * as jsonData from '../database/db.json';
 import { Hotel } from "../entity/Hotel";
 import { SelectQueryBuilder } from "typeorm";
 
-interface QueryParams {
+export interface QueryParams {
    categoryId?: number;
    page?: number;
    limit?: number;
+   message?: string;
+   keyBot?: string;
  }
+ 
 
 export class BusinessController {
     private businessRepository = AppDataSource.getRepository(Business);
@@ -92,7 +95,7 @@ export class BusinessController {
 
    async remove(request: Request, response: Response, next: NextFunction) {
         
-            const business = await this.businessRepository.findOneBy({
+        const business = await this.businessRepository.findOneBy({
                id: Number(request.params.id),
            });
            if (!business) throw Error ('Business not found.');
@@ -137,4 +140,6 @@ export class BusinessController {
             await this.businessRepository.save(business);
         }
     }
+
+      
 }

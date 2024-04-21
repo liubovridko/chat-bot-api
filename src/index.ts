@@ -20,15 +20,20 @@ AppDataSource.initialize().then(async () => {
     app.use(morgan('combined', {
         skip: function (req, res) { return res.statusCode < 400 }
     }))
-    
+
+
     app.use(bodyParser.json());
 
     // register express routes from defined application routes
     Routes.forEach(route => {
         (app as any)[route.method](route.route, async (req: Request, res: Response, next: Function) => {
+        //     console.log(`Request received: ${req.method} ${req.url}`);
+        //   next();
             try {
             const result = await (new (route.controller as any))[route.action](req, res, next);
-            res.json(result);
+            if (!res.headersSent) {
+                res.json(result);
+            }
             } catch (error) {
                 next(error);
             }
