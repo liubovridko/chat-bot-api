@@ -4,6 +4,7 @@ exports.Routes = void 0;
 const BusinessController_1 = require("../controller/BusinessController");
 const UserController_1 = require("../controller/UserController");
 const HotelController_1 = require("../controller/HotelController");
+const SearchController_1 = require("../controller/SearchController");
 exports.Routes = [{
         method: "get",
         route: "/users",
@@ -39,6 +40,11 @@ exports.Routes = [{
         route: "/business/:id",
         controller: BusinessController_1.BusinessController,
         action: "getOne"
+    }, {
+        method: "get",
+        route: "/search",
+        controller: SearchController_1.SearchController,
+        action: "searchByKeywords"
     }, {
         method: "post",
         route: "/business",
