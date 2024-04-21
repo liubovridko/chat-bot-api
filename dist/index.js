@@ -52,9 +52,13 @@ data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, vo
     // register express routes from defined application routes
     Routes_1.Routes.forEach(route => {
         app[route.method](route.route, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+            //     console.log(`Request received: ${req.method} ${req.url}`);
+            //   next();
             try {
                 const result = yield (new route.controller)[route.action](req, res, next);
-                res.json(result);
+                if (!res.headersSent) {
+                    res.json(result);
+                }
             }
             catch (error) {
                 next(error);

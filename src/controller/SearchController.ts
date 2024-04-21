@@ -50,7 +50,6 @@ export class SearchController {
       const hotel = await this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
       if (!hotel) throw new Error("Hotel not found");
 
-      // Сохраняем запрос в базе данных
       // const searchQuery = this.searchQueryRepository.create({
       //   text: message,
       //   hotel: hotel
