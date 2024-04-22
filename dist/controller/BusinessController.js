@@ -43,16 +43,24 @@ class BusinessController {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParams = request.query;
             const { keyBot = "chatbot1" } = queryParams;
-            const hotel = yield data_source_1.AppDataSource.getRepository(Hotel_1.Hotel).findOne({
-                where: { chatBot_key: keyBot },
-            });
-            if (!hotel)
-                throw Error('Hotel not found.');
-            const business = yield this.businessRepository.find({
-                where: { hotelId: hotel.id },
-            });
-            return business;
+            //     const hotel = await AppDataSource.getRepository(Hotel).findOne({
+            //         where: { chatBot_key: keyBot },
+            //     });
+            //     if (!hotel) throw Error ('Hotel not found.'); 
+            // const business = await this.businessRepository.find({
+            //         where: { hotelId: hotel.id },
+            //     });
+            // return business;
             //return this.businessRepository.find();
+            const queryBuilder = this.businessRepository
+                .createQueryBuilder('business')
+                .innerJoin(Hotel_1.Hotel, 'hotel', 'hotel.id = business.hotelId')
+                .where('hotel.chatBot_key = :keyBot', { keyBot });
+            const businesses = yield queryBuilder.getMany();
+            if (!businesses.length) {
+                throw new Error('Businesses not found.');
+            }
+            return businesses;
         });
     }
     getAllAdmin(request, response, next) {
