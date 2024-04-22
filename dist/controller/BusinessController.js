@@ -33,6 +33,7 @@ const data_source_1 = require("../data-source");
 const Business_1 = require("../entity/Business");
 const Category_1 = require("../entity/Category");
 const jsonData = __importStar(require("../database/db.json"));
+const Hotel_1 = require("../entity/Hotel");
 class BusinessController {
     constructor() {
         this.businessRepository = data_source_1.AppDataSource.getRepository(Business_1.Business);
@@ -40,17 +41,18 @@ class BusinessController {
     }
     getAll(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const botKey = request.query.botKey;
-            // if (botKey) {
-            //     const hotel = await AppDataSource.getRepository(Hotel).findOne({
-            //         where: { chatBot_key: botKey },
-            //     });
-            //     if (!hotel) throw Error ('Hotel not found.'); 
-            //     await this.businessRepository.find({
-            //         where: { hotelId: hotel.id },
-            //     });
-            // }
-            return this.businessRepository.find();
+            const queryParams = request.query;
+            const { keyBot = "chatbot1" } = queryParams;
+            const hotel = yield data_source_1.AppDataSource.getRepository(Hotel_1.Hotel).findOne({
+                where: { chatBot_key: keyBot },
+            });
+            if (!hotel)
+                throw Error('Hotel not found.');
+            const business = yield this.businessRepository.find({
+                where: { hotelId: hotel.id },
+            });
+            return business;
+            //return this.businessRepository.find();
         });
     }
     getAllAdmin(request, response, next) {

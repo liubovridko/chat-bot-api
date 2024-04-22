@@ -21,22 +21,20 @@ export class BusinessController {
 
    async getAll(request: Request, response: Response, next: NextFunction) {
 
-         const botKey = request.query.botKey as string;
+        const queryParams: QueryParams = request.query;
+        const { keyBot = "chatbot1" } = queryParams;
 
-         // if (botKey) {
-         //     const hotel = await AppDataSource.getRepository(Hotel).findOne({
-         //         where: { chatBot_key: botKey },
-         //     });
+            const hotel = await AppDataSource.getRepository(Hotel).findOne({
+                where: { chatBot_key: keyBot },
+            });
 
-         //     if (!hotel) throw Error ('Hotel not found.'); 
+            if (!hotel) throw Error ('Hotel not found.'); 
 
-         //     await this.businessRepository.find({
-         //         where: { hotelId: hotel.id },
-         //     });
-         // }
-         return this.businessRepository.find();
-        
-   
+        const business = await this.businessRepository.find({
+                where: { hotelId: hotel.id },
+            });
+        return business;
+         //return this.businessRepository.find();
     }
 
  async getAllAdmin(request: Request, response: Response, next: NextFunction) {

@@ -1,13 +1,16 @@
-import { AppDataSource } from "../data-source"
-import { NextFunction, Request, Response } from "express"
-import { Hotel } from "../entity/Hotel"
+import { AppDataSource } from "../data-source";
+import { NextFunction, Request, Response } from "express";
+import { Hotel } from "../entity/Hotel";
+import { QueryParams } from "./BusinessController";
 
 export class HotelController {
 
     private userRepository = AppDataSource.getRepository(Hotel)
 
     async all(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.find()
+        const queryParams: QueryParams = request.query;
+        const { keyBot = "chatbot1" } = queryParams;
+        return this.userRepository.findOne({ where: { chatBot_key: keyBot } });
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
