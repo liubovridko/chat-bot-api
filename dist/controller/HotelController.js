@@ -18,7 +18,9 @@ class HotelController {
     }
     all(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.userRepository.find();
+            const queryParams = request.query;
+            const { keyBot = "chatbot1" } = queryParams;
+            return this.userRepository.findOne({ where: { chatBot_key: keyBot } });
         });
     }
     one(request, response, next) {
