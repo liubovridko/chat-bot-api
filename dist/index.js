@@ -37,6 +37,7 @@ const morgan_1 = __importDefault(require("morgan"));
 const data_source_1 = require("./data-source");
 const Routes_1 = require("./routes/Routes");
 const cors_1 = __importDefault(require("cors"));
+const path_1 = __importDefault(require("path"));
 function handleError(err, req, res, next) {
     res.status(err.statusCode || 500).send({ message: err.message });
 }
@@ -49,9 +50,25 @@ data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, vo
         skip: function (req, res) { return res.statusCode < 400; }
     }));
     app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+    // app.use(express.static(__dirname + '/public'));
+    const uploadsPath = path_1.default.resolve(__dirname, '..', 'uploads');
+    //if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath);
+    // const imagesPath = path.join(uploadsPath, 'images');
+    // if (!fs.existsSync(imagesPath)) {
+    // fs.mkdirSync(imagesPath, { recursive: true });
+    // }
+    app.use("/uploads", express_1.default.static(uploadsPath));
+    app.use("/uploads/images", express_1.default.static(path_1.default.join(uploadsPath, 'images')));
     // register express routes from defined application routes
     Routes_1.Routes.forEach(route => {
-        app[route.method](route.route, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        const middlewareArray = [];
+        // Если для маршрута указан middleware, добавляем его в массив
+        if (route.middleware) {
+            middlewareArray.push(route.middleware);
+        }
+        // Добавляем обработчик запроса в массив
+        middlewareArray.push((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
             //     console.log(`Request received: ${req.method} ${req.url}`);
             //   next();
             try {
@@ -64,38 +81,13 @@ data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, vo
                 next(error);
             }
         }));
+        // Регистрируем маршрут с middleware
+        app[route.method](route.route, ...middlewareArray);
     });
     app.use(handleError);
-    // setup express app here
-    // ...
     // start express server
     const port = process.env.PORT || 4002;
     app.listen(port);
-    // insert new users for test
-    // await AppDataSource.manager.save(
-    //     AppDataSource.manager.create(User, {
-    //         firstName: "Timber",
-    //         lastName: "Saw",
-    //         email:"admin@gmail.com",
-    //         password: "1111"
-    //     })
-    // )
-    // await AppDataSource.manager.save(
-    //     AppDataSource.manager.create(User, {
-    //         firstName: "Phantom",
-    //         lastName: "Assassin",
-    //         age: 24
-    //     })
-    // )
-    // app.post('/fetch-business', async (req, res) => {
-    //     try {
-    //         const businessController = new BusinessController();
-    //         await businessController.saveBusinessesFromJson(jsonData); 
-    //         res.status(200).send({ message: 'Businesses saved successfully.' });
-    //     } catch (error) {
-    //         res.status(500).send({ message: 'Error saving businesses.', error: error.message });
-    //     }
-    // });
     console.log(`Express server has started on port: ${port}. Open http://localhost:${port}/`);
 })).catch(error => console.log(error));
 //# sourceMappingURL=index.js.map

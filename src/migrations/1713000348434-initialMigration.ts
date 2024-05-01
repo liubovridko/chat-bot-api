@@ -35,7 +35,7 @@ export class InitialMigration1713000348434 implements MigrationInterface {
                 {
                     name: "role",
                     type: "varchar",
-                    default: "'ghost'",
+                    default: "'user'",
                 },
             ],
         }), true);

@@ -8,23 +8,14 @@ export class HotelController {
     private userRepository = AppDataSource.getRepository(Hotel)
 
     async all(request: Request, response: Response, next: NextFunction) {
-        const queryParams: QueryParams = request.query;
-        const { keyBot = "chatbot1" } = queryParams;
-        return this.userRepository.findOne({ where: { chatBot_key: keyBot } });
+       
+        return this.userRepository.find();
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
-        const id = parseInt(request.params.id)
-
-
-        const user = await this.userRepository.findOne({
-            where: { id }
-        })
-
-        if (!user) {
-            return "unregistered user"
-        }
-        return user
+        const queryParams: QueryParams = request.query;
+        const { keyBot = "chatbot1" } = queryParams;
+        return this.userRepository.findOne({ where: { chatBot_key: keyBot } });
     }
 
     async save(request: Request, response: Response, next: NextFunction) {

@@ -5,6 +5,9 @@ import  morgan from "morgan";
 import { AppDataSource } from "./data-source";
 import { Routes } from "./routes/Routes";
 import  cors from "cors";
+import path from "path";
+import fs from 'fs';
+
 
 
 function handleError(err, req, res, next) {
@@ -23,59 +26,55 @@ AppDataSource.initialize().then(async () => {
 
 
     app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+  
+    // app.use(express.static(__dirname + '/public'));
+    const uploadsPath = path.resolve(__dirname, '..', 'uploads');
+    
+    //if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath);
+
+    // const imagesPath = path.join(uploadsPath, 'images');
+
+    // if (!fs.existsSync(imagesPath)) {
+    // fs.mkdirSync(imagesPath, { recursive: true });
+    // }
+    
+    app.use("/uploads", express.static(uploadsPath));
+    app.use("/uploads/images", express.static(path.join(uploadsPath, 'images')));
 
     // register express routes from defined application routes
     Routes.forEach(route => {
-        (app as any)[route.method](route.route, async (req: Request, res: Response, next: Function) => {
-        //     console.log(`Request received: ${req.method} ${req.url}`);
-        //   next();
+        const middlewareArray = [];
+
+        // Если для маршрута указан middleware, добавляем его в массив
+        if (route.middleware) {
+            middlewareArray.push(route.middleware);
+        }
+
+        // Добавляем обработчик запроса в массив
+        middlewareArray.push(async (req: Request, res: Response, next: Function) => {
+            //     console.log(`Request received: ${req.method} ${req.url}`);
+            //   next();
             try {
-            const result = await (new (route.controller as any))[route.action](req, res, next);
-            if (!res.headersSent) {
-                res.json(result);
-            }
+                const result = await (new (route.controller as any))[route.action](req, res, next);
+                if (!res.headersSent) {
+                    res.json(result);
+                }
             } catch (error) {
                 next(error);
             }
         });
+
+        // Регистрируем маршрут с middleware
+        (app as any)[route.method](route.route, ...middlewareArray);
     });
 
     app.use(handleError);
-
-    // setup express app here
-    // ...
 
     // start express server
     const port = process.env.PORT || 4002;
     app.listen(port);
 
-    // insert new users for test
-    // await AppDataSource.manager.save(
-    //     AppDataSource.manager.create(User, {
-    //         firstName: "Timber",
-    //         lastName: "Saw",
-    //         email:"admin@gmail.com",
-    //         password: "1111"
-    //     })
-    // )
-
-    // await AppDataSource.manager.save(
-    //     AppDataSource.manager.create(User, {
-    //         firstName: "Phantom",
-    //         lastName: "Assassin",
-    //         age: 24
-    //     })
-    // )
-
-    // app.post('/fetch-business', async (req, res) => {
-    //     try {
-    //         const businessController = new BusinessController();
-    //         await businessController.saveBusinessesFromJson(jsonData); 
-    //         res.status(200).send({ message: 'Businesses saved successfully.' });
-    //     } catch (error) {
-    //         res.status(500).send({ message: 'Error saving businesses.', error: error.message });
-    //     }
-    // });
 
     console.log(`Express server has started on port: ${port}. Open http://localhost:${port}/`)
 

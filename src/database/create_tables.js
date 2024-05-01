@@ -5,7 +5,7 @@ CREATE TABLE "user" (
     "lastName" VARCHAR,
     "email" VARCHAR NOT NULL,
     "password" VARCHAR NOT NULL,
-    "role" VARCHAR DEFAULT 'ghost'
+    "role" VARCHAR DEFAULT 'user'
 );
 
 -- Create Hotel table

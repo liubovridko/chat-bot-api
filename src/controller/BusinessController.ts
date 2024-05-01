@@ -6,8 +6,10 @@ import * as jsonData from '../database/db.json';
 import { Hotel } from "../entity/Hotel";
 import { SelectQueryBuilder } from "typeorm";
 
+
 export interface QueryParams {
    categoryId?: number;
+   hotelId?:number;
    page?: number;
    limit?: number;
    message?: string;
@@ -18,6 +20,8 @@ export interface QueryParams {
 export class BusinessController {
     private businessRepository = AppDataSource.getRepository(Business);
     private categoryRepository = AppDataSource.getRepository(Category);
+    private hotelRepository = AppDataSource.getRepository(Hotel);
+
 
    async getAll(request: Request, response: Response, next: NextFunction) {
 
@@ -52,19 +56,26 @@ export class BusinessController {
 
  async getAllAdmin(request: Request, response: Response, next: NextFunction) {
       const queryParams: QueryParams = request.query;
-      const { categoryId, page = 1, limit = 10 } = queryParams;
+      const { categoryId, hotelId } = queryParams;
 
       let query: SelectQueryBuilder<Business> = this.businessRepository
           .createQueryBuilder('business')
-          .skip((page - 1) * limit)
-          .take(limit);
+          .leftJoinAndSelect('business.category', 'category')
+          .leftJoinAndSelect('business.hotel', 'hotel')
 
       if (categoryId) {
-          query = query.innerJoinAndSelect('business.category', 'category')
-                       .where('category.id = :categoryId', { categoryId });
+          query = query.andWhere('category.id = :categoryId', { categoryId });
       }
 
-      const businesses = await query.getMany();
+      if (hotelId) {
+        query = query.andWhere('hotel.id = :hotelId', { hotelId });
+    }
+
+      const businesses = await query
+        //  .skip((page - 1) * limit)
+        //  .take(limit)
+         .getMany();
+
       if(!businesses) throw Error('Error retrieving businesses.'); 
       return businesses;
 }
@@ -77,7 +88,7 @@ export class BusinessController {
            });
            
             if (!business) throw Error('Business not found.'); 
-               
+            return business;
    }
 
    async create(request: Request, response: Response, next: NextFunction) {
@@ -95,13 +106,28 @@ export class BusinessController {
    }
 
    async update(request: Request, response: Response, next: NextFunction) {
+    try {
+        const business = await this.businessRepository.findOneBy({
+          id: Number(request.params.id),
+        });
+    
+        if (!business) {
+          throw new Error('Business not found.');
+        }
+
+          this.businessRepository.merge(business, request.body);
+          await this.businessRepository.save(business);
+    
+          // Отправляем успешный ответ
+          return { message: 'Business updated successfully.' };
+      //  });
       
-            const business = await this.businessRepository.findOneBy({
-               id: Number(request.params.id),
-           });
-            if (!business) throw Error ('Business not found.');
-            this.businessRepository.merge(business, request.body);
-           await this.businessRepository.save(business);   
+      } catch (error) {
+        // Обработка ошибок
+        console.error('Error updating business:', error);
+       // response.status(500).json({ error: 'Error updating business.' });
+        throw Error('Error updating business.');
+      }  
    }
 
    async remove(request: Request, response: Response, next: NextFunction) {

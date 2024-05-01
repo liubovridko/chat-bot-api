@@ -6,12 +6,27 @@ import { Hotel } from "../entity/Hotel";
 import { QueryParams } from "./BusinessController";
 
 
+interface IQueryParams {
+  startDate: string;
+  endDate: string;
+}
+
 
 export class SearchController {
 
   private businessRepository = AppDataSource.getRepository(Business);
   private searchQueryRepository = AppDataSource.getRepository(SearchQuery);
   private hotelRepository = AppDataSource.getRepository(Hotel);
+
+  async getAll(request: Request, response: Response, next: NextFunction) {
+    //return this.searchQueryRepository.find({ relations: ['hotel'] });
+    const searchQueries = await this.searchQueryRepository
+    .createQueryBuilder('searchQuery')
+    .leftJoinAndSelect('searchQuery.hotel', 'hotel') 
+    .orderBy('searchQuery.createdAt', 'DESC') 
+    .getMany();
+    return response.json(searchQueries);
+  }
 
   async searchKeywordsInObjects(words: string[], objects: any[]): Promise<any[]> {
    let filteredObjects: any[] = [];
@@ -50,11 +65,11 @@ export class SearchController {
       const hotel = await this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
       if (!hotel) throw new Error("Hotel not found");
 
-      // const searchQuery = this.searchQueryRepository.create({
-      //   text: message,
-      //   hotel: hotel
-      // });
-      // await this.searchQueryRepository.save(searchQuery);
+      const searchQuery = this.searchQueryRepository.create({
+        text: message,
+        hotel: hotel
+      });
+      await this.searchQueryRepository.save(searchQuery);
       const filteredObjects = await this.businessRepository
       .createQueryBuilder("business")
       .where("business.hotelId = :hotelId", { hotelId: hotel.id })
@@ -84,5 +99,40 @@ export class SearchController {
     } catch (error) {
       next({ statusCode: 500, message: error.message });
     }
+  }
+
+  public async getSearchQueryStatistic(request:  Request<any, any, any, IQueryParams>, response: Response, next: NextFunction) {
+    const resultData = [];
+    const startDate = new Date(request.query.startDate);
+    startDate.setHours(0, 0, 0, 0); 
+    const endDate = new Date(request.query.endDate);
+    endDate.setHours(23, 59, 59, 999); 
+
+
+    const data = await this.searchQueryRepository
+      .createQueryBuilder('searchQuery')
+      .select([
+        "to_char(searchQuery.createdAt, 'YYYY-MM-DD') as date",
+        'COUNT(*) AS count', 
+      ])
+      .where('searchQuery.createdAt BETWEEN :dateStart AND :dateStop', {
+        dateStart: startDate,
+        dateStop: endDate,
+      })
+      .groupBy('date')
+      .orderBy('date', 'ASC')
+      .getRawMany();
+      console.log(data);
+  
+    // Формируем результат в требуемом формате
+    data.forEach((elem) => {
+      resultData.push({ date: elem.date, count: Number(elem.count) });
+    });
+  
+    if (!resultData.length) {
+      throw new Error('Данные за выбранный период отсутствуют');
+    }
+  
+    return resultData;
   }
 }

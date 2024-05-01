@@ -22,9 +22,9 @@ export const AppDataSource = new DataSource({
     migrations: ["src/migrations/**/*{.ts,.js}"],
     migrationsTableName: "migration_table",
     subscribers: [],
-    ssl: {
-        rejectUnauthorized: false,
-    },
+    // ssl: {
+    //      rejectUnauthorized: false,
+    // },
 })
 
  const ExsampleDataSource = new DataSource({

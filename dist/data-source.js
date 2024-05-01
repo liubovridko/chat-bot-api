@@ -23,9 +23,9 @@ exports.AppDataSource = new typeorm_1.DataSource({
     migrations: ["src/migrations/**/*{.ts,.js}"],
     migrationsTableName: "migration_table",
     subscribers: [],
-    ssl: {
-        rejectUnauthorized: false,
-    },
+    // ssl: {
+    //      rejectUnauthorized: false,
+    // },
 });
 const ExsampleDataSource = new typeorm_1.DataSource({
     type: 'postgres',

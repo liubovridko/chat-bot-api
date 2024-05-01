@@ -9,55 +9,45 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserController = void 0;
+exports.CategoryController = void 0;
 const data_source_1 = require("../data-source");
-const User_1 = require("../entity/User");
-class UserController {
+const Category_1 = require("../entity/Category");
+class CategoryController {
     constructor() {
-        this.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
+        this.categoryRepository = data_source_1.AppDataSource.getRepository(Category_1.Category);
     }
     all(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.userRepository.find();
+            return this.categoryRepository.find();
         });
     }
     one(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const id = parseInt(request.params.id);
-            const user = yield this.userRepository.findOne({
-                where: { id }
-            });
-            if (!user)
-                throw Error('unregistered user');
-            return user;
+            return this.categoryRepository.findOneBy({ id: Number(request.params.id) });
         });
     }
     save(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { firstName, lastName, email, password } = request.body;
-            const user = Object.assign(new User_1.User(), {
-                firstName,
-                lastName,
-                email,
-                password
+            const { name } = request.body;
+            const category = Object.assign(new Category_1.Category(), {
+                name,
             });
-            yield this.userRepository.save(user);
-            return { message: "User was created" };
+            return this.categoryRepository.save(category);
         });
     }
     remove(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
             //const id = parseInt(request.params.id)
-            const userToRemove = yield this.userRepository.findOneBy({ id: Number(request.params.id) });
-            if (!userToRemove)
+            const categoryToRemove = yield this.categoryRepository.findOneBy({ id: Number(request.params.id) });
+            if (!categoryToRemove)
                 throw Error('user does not exist');
             // if (!userToRemove) {
             //     return "this user not exist"
             // }
-            yield this.userRepository.remove(userToRemove);
-            return { message: "user has been removed" };
+            yield this.categoryRepository.remove(categoryToRemove);
+            //return "user has been removed"
         });
     }
 }
-exports.UserController = UserController;
-//# sourceMappingURL=UserController.js.map
+exports.CategoryController = CategoryController;
+//# sourceMappingURL=CategoryController.js.map

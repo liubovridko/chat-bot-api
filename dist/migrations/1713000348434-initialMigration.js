@@ -46,7 +46,7 @@ class InitialMigration1713000348434 {
                     {
                         name: "role",
                         type: "varchar",
-                        default: "'ghost'",
+                        default: "'user'",
                     },
                 ],
             }), true);

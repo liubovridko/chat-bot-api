@@ -38,6 +38,7 @@ class BusinessController {
     constructor() {
         this.businessRepository = data_source_1.AppDataSource.getRepository(Business_1.Business);
         this.categoryRepository = data_source_1.AppDataSource.getRepository(Category_1.Category);
+        this.hotelRepository = data_source_1.AppDataSource.getRepository(Hotel_1.Hotel);
     }
     getAll(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -66,16 +67,21 @@ class BusinessController {
     getAllAdmin(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParams = request.query;
-            const { categoryId, page = 1, limit = 10 } = queryParams;
+            const { categoryId, hotelId } = queryParams;
             let query = this.businessRepository
                 .createQueryBuilder('business')
-                .skip((page - 1) * limit)
-                .take(limit);
+                .leftJoinAndSelect('business.category', 'category')
+                .leftJoinAndSelect('business.hotel', 'hotel');
             if (categoryId) {
-                query = query.innerJoinAndSelect('business.category', 'category')
-                    .where('category.id = :categoryId', { categoryId });
+                query = query.andWhere('category.id = :categoryId', { categoryId });
             }
-            const businesses = yield query.getMany();
+            if (hotelId) {
+                query = query.andWhere('hotel.id = :hotelId', { hotelId });
+            }
+            const businesses = yield query
+                //  .skip((page - 1) * limit)
+                //  .take(limit)
+                .getMany();
             if (!businesses)
                 throw Error('Error retrieving businesses.');
             return businesses;
@@ -88,6 +94,7 @@ class BusinessController {
             });
             if (!business)
                 throw Error('Business not found.');
+            return business;
         });
     }
     create(request, response, next) {
@@ -105,13 +112,25 @@ class BusinessController {
     }
     update(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const business = yield this.businessRepository.findOneBy({
-                id: Number(request.params.id),
-            });
-            if (!business)
-                throw Error('Business not found.');
-            this.businessRepository.merge(business, request.body);
-            yield this.businessRepository.save(business);
+            try {
+                const business = yield this.businessRepository.findOneBy({
+                    id: Number(request.params.id),
+                });
+                if (!business) {
+                    throw new Error('Business not found.');
+                }
+                this.businessRepository.merge(business, request.body);
+                yield this.businessRepository.save(business);
+                // Отправляем успешный ответ
+                return { message: 'Business updated successfully.' };
+                //  });
+            }
+            catch (error) {
+                // Обработка ошибок
+                console.error('Error updating business:', error);
+                // response.status(500).json({ error: 'Error updating business.' });
+                throw Error('Error updating business.');
+            }
         });
     }
     remove(request, response, next) {
