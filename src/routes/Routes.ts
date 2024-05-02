@@ -4,8 +4,12 @@ import { HotelController } from "../controller/HotelController";
 import { SearchController } from "../controller/SearchController";
 import { CategoryController } from "../controller/CategoryController";
 import { authenticateToken } from '../middleware/authenticateToken';
-import { fileController } from "../controller/FileController";
-import { upload } from "../middleware/uploadFile";
+import { fileController } from '../controller/FileController';
+import { upload } from '../middleware/uploadFile';
+import { BusinessRoutes } from './BusinessRoutes';
+import { AuthRoutes } from './AuthRoutes';
+import { KeywordsRoutes } from "./KeywordsRoutes";
+import { HotelRoutes } from "./HotelRoutes";
 
 
 export const Routes = [{

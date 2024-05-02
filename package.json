@@ -32,7 +32,8 @@
       "multer": "^1.4.5-lts.1",
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.13",
-      "typeorm": "0.3.20"
+      "typeorm": "0.3.20",
+      "typeorm-extension": "^3.5.1"
    },
    "scripts": {
       "start": "ts-node src/index.ts",
@@ -41,9 +42,11 @@
       "build": "rimraf dist && tsc",
       "ts.check": "tsc --project tsconfig.json",
       "add-build": "git add dist",
-      "migration:generate": "typeorm-ts-node-commonjs migration:generate -d ./src/data-source.ts ./src/migrations/default",
-      "migration:run": "typeorm-ts-node-commonjs migration:run -d ./src/data-source.ts",
-      "migration:revert": "typeorm-ts-node-commonjs migration:revert -d ./src/data-source.ts"
+      "migration:create": "typeorm migration:create -d ./src/data-source.ts ./src/migrations/default",
+      "migration:generate": "typeorm migration:generate -d ./src/data-source.ts -n PostRefactoring",
+      "migration:run": "npx typeorm-ts-node-commonjs migration:run -d ./src/data-source.ts",
+      "migration:revert": "npx typeorm-ts-node-commonjs migration:revert -d ./src/data-source.ts",
+      "seed:run": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run"
    },
    "pre-commit": [
       "ts.check",

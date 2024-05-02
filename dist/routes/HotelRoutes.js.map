@@ -1,0 +1,1 @@
+{"version":3,"file":"HotelRoutes.js","sourceRoot":"","sources":["../../src/routes/HotelRoutes.ts"],"names":[],"mappings":";;;AAAA,mEAAgE;AAInD,QAAA,WAAW,GAAG,CAAC;QACxB,MAAM,EAAE,KAAK;QACb,KAAK,EAAE,YAAY;QACnB,UAAU,EAAE,iCAAe;QAC3B,MAAM,EAAE,KAAK;KAChB,EAAE;QACC,MAAM,EAAE,KAAK;QACb,KAAK,EAAE,SAAS;QAChB,UAAU,EAAE,iCAAe;QAC3B,MAAM,EAAE,KAAK;KAChB,CAAC,CAAA"}

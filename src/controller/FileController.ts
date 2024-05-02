@@ -1,7 +1,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 
-const imgPath = process.env.IMG_PATH;
+
 export class fileController {
 
    async uploadImage (req: Request , res: Response, next: NextFunction) {
@@ -11,9 +11,10 @@ export class fileController {
     }
 
     return  res.json({
-          url: `${imgPath}/${req.file.filename}`,
+          url: `/uploads/images/${req.file.filename}`,
       });
       
+
 }
 }
 

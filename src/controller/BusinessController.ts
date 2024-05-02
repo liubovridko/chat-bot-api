@@ -2,7 +2,7 @@ import { AppDataSource } from "../data-source"
 import { Business } from "../entity/Business";
 import { Category } from "../entity/Category";
 import { NextFunction, Request, Response } from "express";
-import * as jsonData from '../database/db.json';
+import * as jsonData from '../database/business.json';
 import { Hotel } from "../entity/Hotel";
 import { SelectQueryBuilder } from "typeorm";
 
@@ -10,8 +10,10 @@ import { SelectQueryBuilder } from "typeorm";
 export interface QueryParams {
    categoryId?: number;
    hotelId?:number;
-   page?: number;
-   limit?: number;
+   page?: string;
+   limit?: string;
+   order?: 'ASC' | 'DESC';
+   orderBy?: string;
    message?: string;
    keyBot?: string;
  }
@@ -56,8 +58,8 @@ export class BusinessController {
 
  async getAllAdmin(request: Request, response: Response, next: NextFunction) {
       const queryParams: QueryParams = request.query;
-      const { categoryId, hotelId } = queryParams;
-
+      const { categoryId, hotelId, page , limit , order = 'ASC', orderBy = 'id' } = queryParams;
+      const orderToUpper = order.toUpperCase();
       let query: SelectQueryBuilder<Business> = this.businessRepository
           .createQueryBuilder('business')
           .leftJoinAndSelect('business.category', 'category')
@@ -70,14 +72,16 @@ export class BusinessController {
       if (hotelId) {
         query = query.andWhere('hotel.id = :hotelId', { hotelId });
     }
-
+      const count= await query.getCount();
       const businesses = await query
-        //  .skip((page - 1) * limit)
-        //  .take(limit)
-         .getMany();
+      // .orderBy(`business.${orderBy}`, order)
+      // .skip((page - 1) * Number(limit))
+      // .take(Number(limit))
+      .getMany();
+        
 
       if(!businesses) throw Error('Error retrieving businesses.'); 
-      return businesses;
+      return {count, businesses};
 }
        
                   
@@ -118,14 +122,11 @@ export class BusinessController {
           this.businessRepository.merge(business, request.body);
           await this.businessRepository.save(business);
     
-          // Отправляем успешный ответ
           return { message: 'Business updated successfully.' };
       //  });
       
       } catch (error) {
-        // Обработка ошибок
         console.error('Error updating business:', error);
-       // response.status(500).json({ error: 'Error updating business.' });
         throw Error('Error updating business.');
       }  
    }
@@ -139,7 +140,7 @@ export class BusinessController {
             await this.businessRepository.remove(business);
      
    }
-    async parseBusiness(request: Request, response: Response, next: NextFunction) {
+  async parseBusiness(request: Request, response: Response, next: NextFunction) {
       try {
          await this.saveBusinessesFromJson(jsonData);
          response.status(200).send({ message: 'Businesses saved successfully.' });

@@ -9,18 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fileController = void 0;
-class fileController {
-    uploadImage(req, res, next) {
+const Category_1 = require("../../entity/Category");
+class CategorySeeder {
+    run(dataSource) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!req.file) {
-                return res.status(400).json({ error: "No file uploaded." });
+            const repository = dataSource.getRepository(Category_1.Category);
+            const categoriesData = [
+                { name: 'restaurants' },
+                { name: 'drinks' },
+                { name: 'activities' },
+                { name: 'other' }
+            ];
+            // Check if categories already exist, insert only if not.
+            for (const categoryData of categoriesData) {
+                const category = yield repository.findOne({ where: { name: categoryData.name } });
+                if (!category) {
+                    yield repository.insert(categoryData);
+                }
             }
-            return res.json({
-                url: `/uploads/images/${req.file.filename}`,
-            });
         });
     }
 }
-exports.fileController = fileController;
-//# sourceMappingURL=FileController.js.map
+exports.default = CategorySeeder;
+//# sourceMappingURL=category.seeder.js.map

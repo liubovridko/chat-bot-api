@@ -32,7 +32,7 @@ exports.BusinessController = void 0;
 const data_source_1 = require("../data-source");
 const Business_1 = require("../entity/Business");
 const Category_1 = require("../entity/Category");
-const jsonData = __importStar(require("../database/db.json"));
+const jsonData = __importStar(require("../database/business.json"));
 const Hotel_1 = require("../entity/Hotel");
 class BusinessController {
     constructor() {
@@ -67,7 +67,8 @@ class BusinessController {
     getAllAdmin(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParams = request.query;
-            const { categoryId, hotelId } = queryParams;
+            const { categoryId, hotelId, page, limit, order = 'ASC', orderBy = 'id' } = queryParams;
+            const orderToUpper = order.toUpperCase();
             let query = this.businessRepository
                 .createQueryBuilder('business')
                 .leftJoinAndSelect('business.category', 'category')
@@ -78,13 +79,15 @@ class BusinessController {
             if (hotelId) {
                 query = query.andWhere('hotel.id = :hotelId', { hotelId });
             }
+            const count = yield query.getCount();
             const businesses = yield query
-                //  .skip((page - 1) * limit)
-                //  .take(limit)
+                // .orderBy(`business.${orderBy}`, order)
+                // .skip((page - 1) * Number(limit))
+                // .take(Number(limit))
                 .getMany();
             if (!businesses)
                 throw Error('Error retrieving businesses.');
-            return businesses;
+            return { count, businesses };
         });
     }
     getOne(request, response, next) {
@@ -121,14 +124,11 @@ class BusinessController {
                 }
                 this.businessRepository.merge(business, request.body);
                 yield this.businessRepository.save(business);
-                // Отправляем успешный ответ
                 return { message: 'Business updated successfully.' };
                 //  });
             }
             catch (error) {
-                // Обработка ошибок
                 console.error('Error updating business:', error);
-                // response.status(500).json({ error: 'Error updating business.' });
                 throw Error('Error updating business.');
             }
         });

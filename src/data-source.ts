@@ -1,15 +1,16 @@
 import 'dotenv/config';
 import "reflect-metadata"
-import { DataSource } from "typeorm"
+import { DataSource, DataSourceOptions } from "typeorm"
 import { User } from "./entity/User"
 import { SearchQuery } from "./entity/SearchQuery"
 import { Business } from "./entity/Business"
 import { Category } from "./entity/Category"
 import { Hotel } from "./entity/Hotel"
+import { SeederOptions } from 'typeorm-extension'
 
 const port = Number(process.env.POSTGRES_PORT);
 
-export const AppDataSource = new DataSource({
+const options: DataSourceOptions & SeederOptions = {
     type: 'postgres',
     host: process.env.POSTGRES_HOST,
     port: port,
@@ -22,10 +23,13 @@ export const AppDataSource = new DataSource({
     migrations: ["src/migrations/**/*{.ts,.js}"],
     migrationsTableName: "migration_table",
     subscribers: [],
+    seeds: ['src/database/seeds/**/*{.ts,.js}'],
     // ssl: {
     //      rejectUnauthorized: false,
     // },
-})
+}
+
+export const AppDataSource  = new DataSource(options)
 
  const ExsampleDataSource = new DataSource({
     type: 'postgres',

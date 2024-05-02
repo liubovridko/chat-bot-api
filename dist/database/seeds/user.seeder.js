@@ -9,18 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fileController = void 0;
-class fileController {
-    uploadImage(req, res, next) {
+const bcrypt_1 = require("bcrypt");
+const User_1 = require("../../entity/User");
+class UserSeeder {
+    run(dataSource) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!req.file) {
-                return res.status(400).json({ error: "No file uploaded." });
+            const repository = dataSource.getRepository(User_1.User);
+            const data = {
+                firstName: 'admin',
+                lastName: 'admin',
+                email: 'admin@gmail.com',
+                password: yield (0, bcrypt_1.hash)('111111', 10),
+                role: User_1.UserRole.ADMIN
+            };
+            const user = yield repository.findOneBy({ email: data.email });
+            // Insert only one record with this username.
+            if (!user) {
+                yield repository.insert([data]);
             }
-            return res.json({
-                url: `/uploads/images/${req.file.filename}`,
-            });
         });
     }
 }
-exports.fileController = fileController;
-//# sourceMappingURL=FileController.js.map
+exports.default = UserSeeder;
+//# sourceMappingURL=user.seeder.js.map
