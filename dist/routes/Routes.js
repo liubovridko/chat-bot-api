@@ -39,6 +39,7 @@ exports.Routes = [{
         method: "post",
         route: "/parse-business",
         controller: BusinessController_1.BusinessController,
+        middleware: authenticateToken_1.authenticateToken,
         action: "parseBusiness"
     }, {
         method: "get",

@@ -59,7 +59,7 @@ class BusinessController {
                 .where('hotel.chatBot_key = :keyBot', { keyBot });
             const businesses = yield queryBuilder.getMany();
             if (!businesses.length) {
-                throw new Error('Businesses not found.');
+                throw Error('Businesses not found.');
             }
             return businesses;
         });
@@ -120,16 +120,15 @@ class BusinessController {
                     id: Number(request.params.id),
                 });
                 if (!business) {
-                    throw new Error('Business not found.');
+                    throw Error('Business not found.');
                 }
                 this.businessRepository.merge(business, request.body);
                 yield this.businessRepository.save(business);
                 return { message: 'Business updated successfully.' };
-                //  });
             }
             catch (error) {
                 console.error('Error updating business:', error);
-                throw Error('Error updating business.');
+                throw Error('Failed to update business: ' + error.message);
             }
         });
     }
@@ -146,15 +145,31 @@ class BusinessController {
     parseBusiness(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.saveBusinessesFromJson(jsonData);
-                response.status(200).send({ message: 'Businesses saved successfully.' });
+                const hotelId = yield this.saveHotelFromJson(jsonData.hotel);
+                yield this.saveBusinessesFromJson(jsonData, hotelId);
+                return { message: 'Businesses saved successfully.' };
             }
             catch (error) {
-                next({ statusCode: 500, message: error.message });
+                throw Error('Failed to save businesses: ' + error.message);
             }
         });
     }
-    saveBusinessesFromJson(data) {
+    saveHotelFromJson(hotelData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(hotelData);
+            const hotel = Object.assign(new Hotel_1.Hotel(), {
+                title: hotelData.title,
+                url: hotelData.url,
+                description: hotelData.description,
+                chatBot_key: hotelData.chatBot_key,
+                keywords: hotelData.keywords
+            });
+            // сохраняем отель и возвращаем его идентификатор
+            const savedHotel = yield this.hotelRepository.save(hotel);
+            return savedHotel.id;
+        });
+    }
+    saveBusinessesFromJson(data, hotelId) {
         return __awaiter(this, void 0, void 0, function* () {
             const businessesData = [
                 ...data.restaurants.map(b => (Object.assign(Object.assign({}, b), { categoryId: 1 }))),
@@ -165,7 +180,7 @@ class BusinessController {
             for (const businessData of businessesData) {
                 const category = yield this.categoryRepository.findOne({ where: { id: businessData.categoryId }, });
                 if (!category) {
-                    throw new Error(`Category with id ${businessData.categoryId} not found.`);
+                    throw Error(`Category with id ${businessData.categoryId} not found.`);
                 }
                 // Convert keywords object to array
                 const keywordsArray = Object.values(businessData.keywords);
@@ -175,7 +190,7 @@ class BusinessController {
                     description: businessData.description,
                     keywords: keywordsArray,
                     categoryId: businessData.categoryId,
-                    hotelId: 1, // Assuming hotelId is always 1
+                    hotelId: hotelId,
                 });
                 yield this.businessRepository.save(business);
             }

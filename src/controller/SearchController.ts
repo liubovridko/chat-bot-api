@@ -19,13 +19,13 @@ export class SearchController {
   private hotelRepository = AppDataSource.getRepository(Hotel);
 
   async getAll(request: Request, response: Response, next: NextFunction) {
-    //return this.searchQueryRepository.find({ relations: ['hotel'] });
+    
     const searchQueries = await this.searchQueryRepository
     .createQueryBuilder('searchQuery')
     .leftJoinAndSelect('searchQuery.hotel', 'hotel') 
     .orderBy('searchQuery.createdAt', 'DESC') 
     .getMany();
-    return response.json(searchQueries);
+    return searchQueries;
   }
 
   async searchKeywordsInObjects(words: string[], objects: any[]): Promise<any[]> {
@@ -63,7 +63,7 @@ export class SearchController {
 
     try {
       const hotel = await this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
-      if (!hotel) throw new Error("Hotel not found");
+      if (!hotel) throw Error("Hotel not found");
 
       const searchQuery = this.searchQueryRepository.create({
         text: message,
@@ -130,7 +130,7 @@ export class SearchController {
     });
   
     if (!resultData.length) {
-      throw new Error('Данные за выбранный период отсутствуют');
+      throw  Error('There is no data for the selected period');
     }
   
     return resultData;

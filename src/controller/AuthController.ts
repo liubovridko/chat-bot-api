@@ -86,8 +86,11 @@ export class AuthController {
             where: { id }
         })
 
-        if (!user) throw Error('User not found');
-
+        if (!user) {
+            const error = new Error('User not found');
+            (error as any).statusCode = 401; 
+            throw error;
+        } 
       
 		return user;
     }

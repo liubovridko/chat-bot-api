@@ -22,13 +22,12 @@ class SearchController {
     }
     getAll(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            //return this.searchQueryRepository.find({ relations: ['hotel'] });
             const searchQueries = yield this.searchQueryRepository
                 .createQueryBuilder('searchQuery')
                 .leftJoinAndSelect('searchQuery.hotel', 'hotel')
                 .orderBy('searchQuery.createdAt', 'DESC')
                 .getMany();
-            return response.json(searchQueries);
+            return searchQueries;
         });
     }
     searchKeywordsInObjects(words, objects) {
@@ -64,7 +63,7 @@ class SearchController {
             try {
                 const hotel = yield this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
                 if (!hotel)
-                    throw new Error("Hotel not found");
+                    throw Error("Hotel not found");
                 const searchQuery = this.searchQueryRepository.create({
                     text: message,
                     hotel: hotel
@@ -123,7 +122,7 @@ class SearchController {
                 resultData.push({ date: elem.date, count: Number(elem.count) });
             });
             if (!resultData.length) {
-                throw new Error('Данные за выбранный период отсутствуют');
+                throw Error('There is no data for the selected period');
             }
             return resultData;
         });

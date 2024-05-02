@@ -84,8 +84,11 @@ class AuthController {
             const user = yield this.userRepository.findOne({
                 where: { id }
             });
-            if (!user)
-                throw Error('User not found');
+            if (!user) {
+                const error = new Error('User not found');
+                error.statusCode = 401;
+                throw error;
+            }
             return user;
         });
     }

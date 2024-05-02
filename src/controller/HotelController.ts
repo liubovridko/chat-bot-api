@@ -5,17 +5,17 @@ import { QueryParams } from "./BusinessController";
 
 export class HotelController {
 
-    private userRepository = AppDataSource.getRepository(Hotel)
+    private hotelRepository = AppDataSource.getRepository(Hotel)
 
     async all(request: Request, response: Response, next: NextFunction) {
        
-        return this.userRepository.find();
+        return this.hotelRepository.find();
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
         const queryParams: QueryParams = request.query;
         const { keyBot = "chatbot1" } = queryParams;
-        return this.userRepository.findOne({ where: { chatBot_key: keyBot } });
+        return this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
@@ -28,21 +28,17 @@ export class HotelController {
             chatBot_key
         })
 
-        return this.userRepository.save(hotel)
+        return this.hotelRepository.save(hotel)
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
         //const id = parseInt(request.params.id)
 
-        const hotelToRemove = await this.userRepository.findOneBy({id:parseInt(request.params.id) });
+        const hotelToRemove = await this.hotelRepository.findOneBy({id:parseInt(request.params.id) });
         if (!hotelToRemove) throw Error('user does not exist');
-        // if (!userToRemove) {
-        //     return "this user not exist"
-        // }
 
-        await this.userRepository.remove(hotelToRemove);
-
-        //return "user has been removed"
+        await this.hotelRepository.remove(hotelToRemove);
+        return "user has been removed"
     }
 
 }

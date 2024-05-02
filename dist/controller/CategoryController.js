@@ -37,15 +37,11 @@ class CategoryController {
     }
     remove(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            //const id = parseInt(request.params.id)
             const categoryToRemove = yield this.categoryRepository.findOneBy({ id: Number(request.params.id) });
             if (!categoryToRemove)
-                throw Error('user does not exist');
-            // if (!userToRemove) {
-            //     return "this user not exist"
-            // }
+                throw Error('category does not exist');
             yield this.categoryRepository.remove(categoryToRemove);
-            //return "user has been removed"
+            return "category has been removed";
         });
     }
 }

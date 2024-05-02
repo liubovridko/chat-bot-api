@@ -33,11 +33,11 @@ AppDataSource.initialize().then(async () => {
     
     //if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath);
 
-    // const imagesPath = path.join(uploadsPath, 'images');
+    const imagesPath = path.join(uploadsPath, 'images');
 
-    // if (!fs.existsSync(imagesPath)) {
-    // fs.mkdirSync(imagesPath, { recursive: true });
-    // }
+    if (!fs.existsSync(imagesPath)) {
+    fs.mkdirSync(imagesPath, { recursive: true });
+    }
     
     app.use("/uploads", express.static(uploadsPath));
     app.use("/uploads/images", express.static(path.join(uploadsPath, 'images')));
@@ -46,13 +46,14 @@ AppDataSource.initialize().then(async () => {
     Routes.forEach(route => {
         const middlewareArray = [];
 
-        // Если для маршрута указан middleware, добавляем его в массив
+        // If middleware is specified for the route, add it to the array
         if (route.middleware) {
             middlewareArray.push(route.middleware);
         }
 
-        // Добавляем обработчик запроса в массив
+        // Add a request handler to the array
         middlewareArray.push(async (req: Request, res: Response, next: Function) => {
+            // use for debug
             //     console.log(`Request received: ${req.method} ${req.url}`);
             //   next();
             try {
@@ -65,7 +66,7 @@ AppDataSource.initialize().then(async () => {
             }
         });
 
-        // Регистрируем маршрут с middleware
+        // Registering a route with middleware
         (app as any)[route.method](route.route, ...middlewareArray);
     });
 

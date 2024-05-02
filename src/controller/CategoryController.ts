@@ -28,17 +28,13 @@ export class CategoryController {
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
-        //const id = parseInt(request.params.id)
-
+      
         const categoryToRemove = await this.categoryRepository.findOneBy({id: Number(request.params.id)});
-        if (!categoryToRemove) throw Error('user does not exist');
-        // if (!userToRemove) {
-        //     return "this user not exist"
-        // }
+        if (!categoryToRemove) throw Error('category does not exist');
+    
 
         await this.categoryRepository.remove(categoryToRemove);
-
-        //return "user has been removed"
+        return "category has been removed"
     }
 
 }

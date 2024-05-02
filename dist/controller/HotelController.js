@@ -14,18 +14,18 @@ const data_source_1 = require("../data-source");
 const Hotel_1 = require("../entity/Hotel");
 class HotelController {
     constructor() {
-        this.userRepository = data_source_1.AppDataSource.getRepository(Hotel_1.Hotel);
+        this.hotelRepository = data_source_1.AppDataSource.getRepository(Hotel_1.Hotel);
     }
     all(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.userRepository.find();
+            return this.hotelRepository.find();
         });
     }
     one(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParams = request.query;
             const { keyBot = "chatbot1" } = queryParams;
-            return this.userRepository.findOne({ where: { chatBot_key: keyBot } });
+            return this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
         });
     }
     save(request, response, next) {
@@ -37,20 +37,17 @@ class HotelController {
                 description,
                 chatBot_key
             });
-            return this.userRepository.save(hotel);
+            return this.hotelRepository.save(hotel);
         });
     }
     remove(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
             //const id = parseInt(request.params.id)
-            const hotelToRemove = yield this.userRepository.findOneBy({ id: parseInt(request.params.id) });
+            const hotelToRemove = yield this.hotelRepository.findOneBy({ id: parseInt(request.params.id) });
             if (!hotelToRemove)
                 throw Error('user does not exist');
-            // if (!userToRemove) {
-            //     return "this user not exist"
-            // }
-            yield this.userRepository.remove(hotelToRemove);
-            //return "user has been removed"
+            yield this.hotelRepository.remove(hotelToRemove);
+            return "user has been removed";
         });
     }
 }

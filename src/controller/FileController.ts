@@ -7,15 +7,16 @@ export class fileController {
    async uploadImage (req: Request , res: Response, next: NextFunction) {
 
     if (!req.file) {
-        return res.status(400).json({ error: "No file uploaded." });
+        const error = new Error('No file uploaded.');
+        (error as any).statusCode = 400; 
+        throw error;
     }
 
-    return  res.json({
+    return  {
           url: `/uploads/images/${req.file.filename}`,
-      });
-      
+      }; 
 
-}
+   }
 }
 
 

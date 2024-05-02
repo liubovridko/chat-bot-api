@@ -38,6 +38,7 @@ const data_source_1 = require("./data-source");
 const Routes_1 = require("./routes/Routes");
 const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
 function handleError(err, req, res, next) {
     res.status(err.statusCode || 500).send({ message: err.message });
 }
@@ -54,21 +55,22 @@ data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, vo
     // app.use(express.static(__dirname + '/public'));
     const uploadsPath = path_1.default.resolve(__dirname, '..', 'uploads');
     //if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath);
-    // const imagesPath = path.join(uploadsPath, 'images');
-    // if (!fs.existsSync(imagesPath)) {
-    // fs.mkdirSync(imagesPath, { recursive: true });
-    // }
+    const imagesPath = path_1.default.join(uploadsPath, 'images');
+    if (!fs_1.default.existsSync(imagesPath)) {
+        fs_1.default.mkdirSync(imagesPath, { recursive: true });
+    }
     app.use("/uploads", express_1.default.static(uploadsPath));
     app.use("/uploads/images", express_1.default.static(path_1.default.join(uploadsPath, 'images')));
     // register express routes from defined application routes
     Routes_1.Routes.forEach(route => {
         const middlewareArray = [];
-        // Если для маршрута указан middleware, добавляем его в массив
+        // If middleware is specified for the route, add it to the array
         if (route.middleware) {
             middlewareArray.push(route.middleware);
         }
-        // Добавляем обработчик запроса в массив
+        // Add a request handler to the array
         middlewareArray.push((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+            // use for debug
             //     console.log(`Request received: ${req.method} ${req.url}`);
             //   next();
             try {
@@ -81,7 +83,7 @@ data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, vo
                 next(error);
             }
         }));
-        // Регистрируем маршрут с middleware
+        // Registering a route with middleware
         app[route.method](route.route, ...middlewareArray);
     });
     app.use(handleError);

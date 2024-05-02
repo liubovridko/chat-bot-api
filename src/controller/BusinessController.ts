@@ -50,7 +50,7 @@ export class BusinessController {
          const businesses = await queryBuilder.getMany();
          
          if (!businesses.length) {
-             throw new Error('Businesses not found.');
+             throw Error('Businesses not found.');
          }
  
          return businesses;
@@ -116,18 +116,16 @@ export class BusinessController {
         });
     
         if (!business) {
-          throw new Error('Business not found.');
+          throw Error('Business not found.');
         }
 
           this.businessRepository.merge(business, request.body);
           await this.businessRepository.save(business);
-    
           return { message: 'Business updated successfully.' };
-      //  });
       
       } catch (error) {
         console.error('Error updating business:', error);
-        throw Error('Error updating business.');
+        throw Error('Failed to update business: ' + error.message);
       }  
    }
 
@@ -140,16 +138,33 @@ export class BusinessController {
             await this.businessRepository.remove(business);
      
    }
+
   async parseBusiness(request: Request, response: Response, next: NextFunction) {
-      try {
-         await this.saveBusinessesFromJson(jsonData);
-         response.status(200).send({ message: 'Businesses saved successfully.' });
+    try {
+      const hotelId = await this.saveHotelFromJson(jsonData.hotel);
+      await this.saveBusinessesFromJson(jsonData, hotelId);
+      return { message: 'Businesses saved successfully.' };
      } catch (error) {
-         next({ statusCode: 500, message: error.message });
+      throw Error('Failed to save businesses: ' + error.message);
      }
   }
 
-    async saveBusinessesFromJson(data: any) {
+  async saveHotelFromJson(hotelData: any): Promise<number> {
+   console.log(hotelData)
+      const hotel = Object.assign(new Hotel(), {
+        title: hotelData.title,
+        url: hotelData.url,
+        description: hotelData.description,
+        chatBot_key: hotelData.chatBot_key,
+        keywords: hotelData.keywords
+    });
+   
+    // сохраняем отель и возвращаем его идентификатор
+    const savedHotel = await this.hotelRepository.save(hotel);
+    return savedHotel.id;
+}
+
+    async saveBusinessesFromJson(data: any, hotelId: number) {
         const businessesData = [
             ...data.restaurants.map(b => ({ ...b, categoryId: 1 })),
             ...data.drinks.map(b => ({ ...b, categoryId: 2 })),
@@ -160,7 +175,7 @@ export class BusinessController {
         for (const businessData of businessesData) {
             const category = await this.categoryRepository.findOne({ where: { id: businessData.categoryId },});
             if (!category) {
-                throw new Error(`Category with id ${businessData.categoryId} not found.`);
+                throw Error(`Category with id ${businessData.categoryId} not found.`);
             }
 
             // Convert keywords object to array
@@ -172,7 +187,7 @@ export class BusinessController {
                 description: businessData.description,
                 keywords: keywordsArray,
                 categoryId: businessData.categoryId,
-                hotelId: 1, // Assuming hotelId is always 1
+                hotelId: hotelId,
             });
 
             await this.businessRepository.save(business);

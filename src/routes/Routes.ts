@@ -6,10 +6,6 @@ import { CategoryController } from "../controller/CategoryController";
 import { authenticateToken } from '../middleware/authenticateToken';
 import { fileController } from '../controller/FileController';
 import { upload } from '../middleware/uploadFile';
-import { BusinessRoutes } from './BusinessRoutes';
-import { AuthRoutes } from './AuthRoutes';
-import { KeywordsRoutes } from "./KeywordsRoutes";
-import { HotelRoutes } from "./HotelRoutes";
 
 
 export const Routes = [{
@@ -43,6 +39,7 @@ export const Routes = [{
     method: "post",
     route: "/parse-business",
     controller: BusinessController,
+    middleware: authenticateToken,
     action: "parseBusiness"
 }, {
     method: "get",

@@ -14,11 +14,13 @@ class fileController {
     uploadImage(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!req.file) {
-                return res.status(400).json({ error: "No file uploaded." });
+                const error = new Error('No file uploaded.');
+                error.statusCode = 400;
+                throw error;
             }
-            return res.json({
+            return {
                 url: `/uploads/images/${req.file.filename}`,
-            });
+            };
         });
     }
 }
