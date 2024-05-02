@@ -20,6 +20,16 @@ class SearchController {
         this.searchQueryRepository = data_source_1.AppDataSource.getRepository(SearchQuery_1.SearchQuery);
         this.hotelRepository = data_source_1.AppDataSource.getRepository(Hotel_1.Hotel);
     }
+    getAll(request, response, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const searchQueries = yield this.searchQueryRepository
+                .createQueryBuilder('searchQuery')
+                .leftJoinAndSelect('searchQuery.hotel', 'hotel')
+                .orderBy('searchQuery.createdAt', 'DESC')
+                .getMany();
+            return searchQueries;
+        });
+    }
     searchKeywordsInObjects(words, objects) {
         return __awaiter(this, void 0, void 0, function* () {
             let filteredObjects = [];
@@ -53,12 +63,12 @@ class SearchController {
             try {
                 const hotel = yield this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
                 if (!hotel)
-                    throw new Error("Hotel not found");
-                // const searchQuery = this.searchQueryRepository.create({
-                //   text: message,
-                //   hotel: hotel
-                // });
-                // await this.searchQueryRepository.save(searchQuery);
+                    throw Error("Hotel not found");
+                const searchQuery = this.searchQueryRepository.create({
+                    text: message,
+                    hotel: hotel
+                });
+                yield this.searchQueryRepository.save(searchQuery);
                 const filteredObjects = yield this.businessRepository
                     .createQueryBuilder("business")
                     .where("business.hotelId = :hotelId", { hotelId: hotel.id })
@@ -84,6 +94,37 @@ class SearchController {
             catch (error) {
                 next({ statusCode: 500, message: error.message });
             }
+        });
+    }
+    getSearchQueryStatistic(request, response, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const resultData = [];
+            const startDate = new Date(request.query.startDate);
+            startDate.setHours(0, 0, 0, 0);
+            const endDate = new Date(request.query.endDate);
+            endDate.setHours(23, 59, 59, 999);
+            const data = yield this.searchQueryRepository
+                .createQueryBuilder('searchQuery')
+                .select([
+                "to_char(searchQuery.createdAt, 'YYYY-MM-DD') as date",
+                'COUNT(*) AS count',
+            ])
+                .where('searchQuery.createdAt BETWEEN :dateStart AND :dateStop', {
+                dateStart: startDate,
+                dateStop: endDate,
+            })
+                .groupBy('date')
+                .orderBy('date', 'ASC')
+                .getRawMany();
+            console.log(data);
+            // Формируем результат в требуемом формате
+            data.forEach((elem) => {
+                resultData.push({ date: elem.date, count: Number(elem.count) });
+            });
+            if (!resultData.length) {
+                throw Error('There is no data for the selected period');
+            }
+            return resultData;
         });
     }
 }

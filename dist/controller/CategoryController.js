@@ -9,47 +9,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HotelController = void 0;
+exports.CategoryController = void 0;
 const data_source_1 = require("../data-source");
-const Hotel_1 = require("../entity/Hotel");
-class HotelController {
+const Category_1 = require("../entity/Category");
+class CategoryController {
     constructor() {
-        this.hotelRepository = data_source_1.AppDataSource.getRepository(Hotel_1.Hotel);
+        this.categoryRepository = data_source_1.AppDataSource.getRepository(Category_1.Category);
     }
     all(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.hotelRepository.find();
+            return this.categoryRepository.find();
         });
     }
     one(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const queryParams = request.query;
-            const { keyBot = "chatbot1" } = queryParams;
-            return this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
+            return this.categoryRepository.findOneBy({ id: Number(request.params.id) });
         });
     }
     save(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { title, url, description, chatBot_key } = request.body;
-            const hotel = Object.assign(new Hotel_1.Hotel(), {
-                title,
-                url,
-                description,
-                chatBot_key
+            const { name } = request.body;
+            const category = Object.assign(new Category_1.Category(), {
+                name,
             });
-            return this.hotelRepository.save(hotel);
+            return this.categoryRepository.save(category);
         });
     }
     remove(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            //const id = parseInt(request.params.id)
-            const hotelToRemove = yield this.hotelRepository.findOneBy({ id: parseInt(request.params.id) });
-            if (!hotelToRemove)
-                throw Error('user does not exist');
-            yield this.hotelRepository.remove(hotelToRemove);
-            return "user has been removed";
+            const categoryToRemove = yield this.categoryRepository.findOneBy({ id: Number(request.params.id) });
+            if (!categoryToRemove)
+                throw Error('category does not exist');
+            yield this.categoryRepository.remove(categoryToRemove);
+            return "category has been removed";
         });
     }
 }
-exports.HotelController = HotelController;
-//# sourceMappingURL=HotelController.js.map
+exports.CategoryController = CategoryController;
+//# sourceMappingURL=CategoryController.js.map

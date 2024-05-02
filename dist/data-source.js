@@ -10,7 +10,7 @@ const Business_1 = require("./entity/Business");
 const Category_1 = require("./entity/Category");
 const Hotel_1 = require("./entity/Hotel");
 const port = Number(process.env.POSTGRES_PORT);
-exports.AppDataSource = new typeorm_1.DataSource({
+const options = {
     type: 'postgres',
     host: process.env.POSTGRES_HOST,
     port: port,
@@ -23,10 +23,12 @@ exports.AppDataSource = new typeorm_1.DataSource({
     migrations: ["src/migrations/**/*{.ts,.js}"],
     migrationsTableName: "migration_table",
     subscribers: [],
-    ssl: {
-        rejectUnauthorized: false,
-    },
-});
+    seeds: ['src/database/seeds/**/*{.ts,.js}'],
+    // ssl: {
+    //      rejectUnauthorized: false,
+    // },
+};
+exports.AppDataSource = new typeorm_1.DataSource(options);
 const ExsampleDataSource = new typeorm_1.DataSource({
     type: 'postgres',
     host: process.env.POSTGRES_HOST,

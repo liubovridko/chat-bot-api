@@ -43,7 +43,7 @@ __decorate([
     (0, typeorm_1.Column)({
         type: "enum",
         enum: UserRole,
-        default: UserRole.GHOST,
+        default: UserRole.USER,
     }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
