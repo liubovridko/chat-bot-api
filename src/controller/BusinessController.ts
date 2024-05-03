@@ -30,18 +30,6 @@ export class BusinessController {
         const queryParams: QueryParams = request.query;
         const { keyBot = "chatbot1" } = queryParams;
 
-        //     const hotel = await AppDataSource.getRepository(Hotel).findOne({
-        //         where: { chatBot_key: keyBot },
-        //     });
-
-        //     if (!hotel) throw Error ('Hotel not found.'); 
-
-        // const business = await this.businessRepository.find({
-        //         where: { hotelId: hotel.id },
-        //     });
-        // return business;
-         //return this.businessRepository.find();
-
          const queryBuilder: SelectQueryBuilder<Business> = this.businessRepository
          .createQueryBuilder('business')
          .innerJoin(Hotel, 'hotel', 'hotel.id = business.hotelId')
@@ -49,9 +37,11 @@ export class BusinessController {
  
          const businesses = await queryBuilder.getMany();
          
-         if (!businesses.length) {
-             throw Error('Businesses not found.');
-         }
+        //  if (!businesses.length) {
+        //   const error = new Error('businesses not found');
+        //   (error as any).statusCode = 404; 
+        //   throw error;
+        //  }
  
          return businesses;
     }
@@ -78,9 +68,7 @@ export class BusinessController {
       // .skip((page - 1) * Number(limit))
       // .take(Number(limit))
       .getMany();
-        
-
-      if(!businesses) throw Error('Error retrieving businesses.'); 
+         
       return {count, businesses};
 }
        
@@ -91,7 +79,12 @@ export class BusinessController {
                id: Number(request.params.id),
            });
            
-            if (!business) throw Error('Business not found.'); 
+            if (!business) {
+              const error = new Error('Business not found.');
+              (error as any).statusCode = 404; 
+              throw error;
+            };
+
             return business;
    }
 
@@ -116,7 +109,9 @@ export class BusinessController {
         });
     
         if (!business) {
-          throw Error('Business not found.');
+            const error = new Error('Business not found.');
+            (error as any).statusCode = 404; 
+            throw error;
         }
 
           this.businessRepository.merge(business, request.body);
@@ -134,7 +129,11 @@ export class BusinessController {
         const business = await this.businessRepository.findOneBy({
                id: Number(request.params.id),
            });
-           if (!business) throw Error ('Business not found.');
+           if (!business) {
+              const error = new Error('Business not found.');
+              (error as any).statusCode = 404; 
+              throw error;
+           }
             await this.businessRepository.remove(business);
      
    }
@@ -159,7 +158,7 @@ export class BusinessController {
         keywords: hotelData.keywords
     });
    
-    // сохраняем отель и возвращаем его идентификатор
+    // Save hotel and return hotelId
     const savedHotel = await this.hotelRepository.save(hotel);
     return savedHotel.id;
 }
@@ -175,7 +174,9 @@ export class BusinessController {
         for (const businessData of businessesData) {
             const category = await this.categoryRepository.findOne({ where: { id: businessData.categoryId },});
             if (!category) {
-                throw Error(`Category with id ${businessData.categoryId} not found.`);
+                const error = new Error(`Category with id ${businessData.categoryId} not found.`);
+                (error as any).statusCode = 404; 
+                throw error;
             }
 
             // Convert keywords object to array

@@ -130,7 +130,9 @@ export class SearchController {
     });
   
     if (!resultData.length) {
-      throw  Error('There is no data for the selected period');
+      const error = new Error('There is no data for the selected period');
+      (error as any).statusCode = 404; 
+      throw error;
     }
   
     return resultData;

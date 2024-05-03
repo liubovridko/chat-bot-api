@@ -31,16 +31,18 @@ AppDataSource.initialize().then(async () => {
     // app.use(express.static(__dirname + '/public'));
     const uploadsPath = path.resolve(__dirname, '..', 'uploads');
     
+    
     //if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath);
 
-    const imagesPath = path.join(uploadsPath, 'images');
+    const imagesPath = path.resolve(uploadsPath, 'images');
+    console.log(imagesPath);
 
     if (!fs.existsSync(imagesPath)) {
     fs.mkdirSync(imagesPath, { recursive: true });
     }
     
     app.use("/uploads", express.static(uploadsPath));
-    app.use("/uploads/images", express.static(path.join(uploadsPath, 'images')));
+    app.use("/uploads/images", express.static(imagesPath));
 
     // register express routes from defined application routes
     Routes.forEach(route => {

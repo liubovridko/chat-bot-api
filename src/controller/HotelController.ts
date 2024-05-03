@@ -35,10 +35,14 @@ export class HotelController {
         //const id = parseInt(request.params.id)
 
         const hotelToRemove = await this.hotelRepository.findOneBy({id:parseInt(request.params.id) });
-        if (!hotelToRemove) throw Error('user does not exist');
+        if (!hotelToRemove) {
+            const error = new Error('Hotel not found');
+            (error as any).statusCode = 404; 
+            throw error;
+        } 
 
         await this.hotelRepository.remove(hotelToRemove);
-        return "user has been removed"
+        return "Hotel has been removed"
     }
 
 }

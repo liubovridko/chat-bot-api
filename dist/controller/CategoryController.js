@@ -38,8 +38,11 @@ class CategoryController {
     remove(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const categoryToRemove = yield this.categoryRepository.findOneBy({ id: Number(request.params.id) });
-            if (!categoryToRemove)
-                throw Error('category does not exist');
+            if (!categoryToRemove) {
+                const error = new Error('Category not found');
+                error.statusCode = 404;
+                throw error;
+            }
             yield this.categoryRepository.remove(categoryToRemove);
             return "category has been removed";
         });

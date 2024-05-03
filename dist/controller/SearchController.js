@@ -122,7 +122,9 @@ class SearchController {
                 resultData.push({ date: elem.date, count: Number(elem.count) });
             });
             if (!resultData.length) {
-                throw Error('There is no data for the selected period');
+                const error = new Error('There is no data for the selected period');
+                error.statusCode = 404;
+                throw error;
             }
             return resultData;
         });

@@ -55,12 +55,13 @@ data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, vo
     // app.use(express.static(__dirname + '/public'));
     const uploadsPath = path_1.default.resolve(__dirname, '..', 'uploads');
     //if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath);
-    const imagesPath = path_1.default.join(uploadsPath, 'images');
+    const imagesPath = path_1.default.resolve(uploadsPath, 'images');
+    console.log(imagesPath);
     if (!fs_1.default.existsSync(imagesPath)) {
         fs_1.default.mkdirSync(imagesPath, { recursive: true });
     }
     app.use("/uploads", express_1.default.static(uploadsPath));
-    app.use("/uploads/images", express_1.default.static(path_1.default.join(uploadsPath, 'images')));
+    app.use("/uploads/images", express_1.default.static(imagesPath));
     // register express routes from defined application routes
     Routes_1.Routes.forEach(route => {
         const middlewareArray = [];
