@@ -18,8 +18,8 @@ class UserSeeder {
             const data = {
                 firstName: 'admin',
                 lastName: 'admin',
-                email: 'admin@gmail.com',
-                password: yield (0, bcrypt_1.hash)('111111', 10),
+                email: process.env.ADMIN_LOGIN,
+                password: yield (0, bcrypt_1.hash)(process.env.ADMIN_PASS, JSON.parse(process.env.SALT)),
                 role: User_1.UserRole.ADMIN
             };
             const user = yield repository.findOneBy({ email: data.email });

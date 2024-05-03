@@ -17,31 +17,18 @@ const options: DataSourceOptions & SeederOptions = {
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DATABASE,
-    synchronize: false,
+    synchronize: Boolean(process.env.PORSTRES_SYNCHRONIZE),
     logging: false,
     entities: [User, Hotel, Category, Business, SearchQuery],
     migrations: ["src/migrations/**/*{.ts,.js}"],
     migrationsTableName: "migration_table",
     subscribers: [],
     seeds: ['src/database/seeds/**/*{.ts,.js}'],
-    // ssl: {
-    //      rejectUnauthorized: false,
-    // },
+    ssl: {
+         rejectUnauthorized: Boolean(process.env.POSTGRES_SSL_ENABLED),
+    },
 }
 
 export const AppDataSource  = new DataSource(options)
 
- const ExsampleDataSource = new DataSource({
-    type: 'postgres',
-    host: process.env.POSTGRES_HOST,
-    port: Number(process.env.POSTGRES_PORT),
-    username: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB,
-    synchronize: false,
-    logging: false,
-    entities: ["src/**/**.entity{.ts,.js}"],
-    migrations: ["src/migrations/**/*{.ts,.js}"],
-    migrationsTableName: "migration_table",
-    subscribers: [],
-})
+

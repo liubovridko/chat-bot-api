@@ -109,11 +109,11 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             //const id = parseInt(request.params.id)
             const userToRemove = yield this.userRepository.findOneBy({ id: Number(request.params.id) });
-            if (!userToRemove)
-                throw Error('user does not exist');
-            // if (!userToRemove) {
-            //     return "this user not exist"
-            // }
+            if (!userToRemove) {
+                const error = new Error('User not found');
+                error.statusCode = 404;
+                throw error;
+            }
             yield this.userRepository.remove(userToRemove);
             return { message: "user has been removed" };
         });

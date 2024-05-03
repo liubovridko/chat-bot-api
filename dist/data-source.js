@@ -17,30 +17,16 @@ const options = {
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DATABASE,
-    synchronize: false,
+    synchronize: Boolean(process.env.PORSTRES_SYNCHRONIZE),
     logging: false,
     entities: [User_1.User, Hotel_1.Hotel, Category_1.Category, Business_1.Business, SearchQuery_1.SearchQuery],
     migrations: ["src/migrations/**/*{.ts,.js}"],
     migrationsTableName: "migration_table",
     subscribers: [],
     seeds: ['src/database/seeds/**/*{.ts,.js}'],
-    // ssl: {
-    //      rejectUnauthorized: false,
-    // },
+    ssl: {
+        rejectUnauthorized: Boolean(process.env.POSTGRES_SSL_ENABLED),
+    },
 };
 exports.AppDataSource = new typeorm_1.DataSource(options);
-const ExsampleDataSource = new typeorm_1.DataSource({
-    type: 'postgres',
-    host: process.env.POSTGRES_HOST,
-    port: Number(process.env.POSTGRES_PORT),
-    username: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB,
-    synchronize: false,
-    logging: false,
-    entities: ["src/**/**.entity{.ts,.js}"],
-    migrations: ["src/migrations/**/*{.ts,.js}"],
-    migrationsTableName: "migration_table",
-    subscribers: [],
-});
 //# sourceMappingURL=data-source.js.map

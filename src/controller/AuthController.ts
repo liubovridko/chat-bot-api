@@ -113,11 +113,13 @@ export class AuthController {
         //const id = parseInt(request.params.id)
 
         const userToRemove = await this.userRepository.findOneBy({id: Number(request.params.id)});
-        if (!userToRemove) throw Error('user does not exist');
-        // if (!userToRemove) {
-        //     return "this user not exist"
-        // }
 
+        if (!userToRemove) {
+            const error = new Error('User not found');
+            (error as any).statusCode = 404; 
+            throw error;
+        } 
+ 
         await this.userRepository.remove(userToRemove);
 
         return  {message:"user has been removed"}

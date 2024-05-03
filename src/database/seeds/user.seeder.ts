@@ -12,8 +12,8 @@ export default class UserSeeder implements Seeder {
     const data = {
       firstName: 'admin',
       lastName: 'admin',
-      email: 'admin@gmail.com',
-      password: await hash('111111', 10),
+      email: process.env.ADMIN_LOGIN,
+      password: await hash(process.env.ADMIN_PASS, JSON.parse(process.env.SALT)),
       role: UserRole.ADMIN
     };
 

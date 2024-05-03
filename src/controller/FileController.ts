@@ -1,4 +1,5 @@
-
+import path from 'path';
+import * as fs from 'fs';
 import { Request, Response, NextFunction } from 'express';
 
 
@@ -11,6 +12,29 @@ export class fileController {
         (error as any).statusCode = 400; 
         throw error;
     }
+
+    const imagePath = req.body.oldImagePath;
+   // const filePath = path.resolve(oldImagePath);
+    // Delete old images
+    if (imagePath) {
+      let fileName = path.basename(imagePath);
+      let filePath = path.join(process.cwd(), process.env.IMG_PATH, fileName);
+      //let filePath = path.resolve( process.env.IMG_PATH, fileName);
+        if (fs.existsSync(filePath)) {
+          try {
+            fs.unlinkSync(filePath);
+            console.log('Old image deleted successfully:', filePath);
+          } catch (error) {
+            console.error('Error deleting old image:', error);
+            // Продолжаем выполнение функции, не выбрасывая ошибку
+          }
+        } else {
+          console.warn('Old image not found:', filePath);
+        }
+      } else {
+        console.warn('No old image path provided.');
+      }
+  
 
     return  {
           url: `/uploads/images/${req.file.filename}`,

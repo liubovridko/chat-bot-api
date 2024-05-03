@@ -44,23 +44,16 @@ class BusinessController {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParams = request.query;
             const { keyBot = "chatbot1" } = queryParams;
-            //     const hotel = await AppDataSource.getRepository(Hotel).findOne({
-            //         where: { chatBot_key: keyBot },
-            //     });
-            //     if (!hotel) throw Error ('Hotel not found.'); 
-            // const business = await this.businessRepository.find({
-            //         where: { hotelId: hotel.id },
-            //     });
-            // return business;
-            //return this.businessRepository.find();
             const queryBuilder = this.businessRepository
                 .createQueryBuilder('business')
                 .innerJoin(Hotel_1.Hotel, 'hotel', 'hotel.id = business.hotelId')
                 .where('hotel.chatBot_key = :keyBot', { keyBot });
             const businesses = yield queryBuilder.getMany();
-            if (!businesses.length) {
-                throw Error('Businesses not found.');
-            }
+            //  if (!businesses.length) {
+            //   const error = new Error('businesses not found');
+            //   (error as any).statusCode = 404; 
+            //   throw error;
+            //  }
             return businesses;
         });
     }
@@ -85,8 +78,6 @@ class BusinessController {
                 // .skip((page - 1) * Number(limit))
                 // .take(Number(limit))
                 .getMany();
-            if (!businesses)
-                throw Error('Error retrieving businesses.');
             return { count, businesses };
         });
     }
@@ -95,8 +86,12 @@ class BusinessController {
             const business = yield this.businessRepository.findOneBy({
                 id: Number(request.params.id),
             });
-            if (!business)
-                throw Error('Business not found.');
+            if (!business) {
+                const error = new Error('Business not found.');
+                error.statusCode = 404;
+                throw error;
+            }
+            ;
             return business;
         });
     }
@@ -120,7 +115,9 @@ class BusinessController {
                     id: Number(request.params.id),
                 });
                 if (!business) {
-                    throw Error('Business not found.');
+                    const error = new Error('Business not found.');
+                    error.statusCode = 404;
+                    throw error;
                 }
                 this.businessRepository.merge(business, request.body);
                 yield this.businessRepository.save(business);
@@ -137,8 +134,11 @@ class BusinessController {
             const business = yield this.businessRepository.findOneBy({
                 id: Number(request.params.id),
             });
-            if (!business)
-                throw Error('Business not found.');
+            if (!business) {
+                const error = new Error('Business not found.');
+                error.statusCode = 404;
+                throw error;
+            }
             yield this.businessRepository.remove(business);
         });
     }
@@ -164,7 +164,7 @@ class BusinessController {
                 chatBot_key: hotelData.chatBot_key,
                 keywords: hotelData.keywords
             });
-            // сохраняем отель и возвращаем его идентификатор
+            // Save hotel and return hotelId
             const savedHotel = yield this.hotelRepository.save(hotel);
             return savedHotel.id;
         });
@@ -180,7 +180,9 @@ class BusinessController {
             for (const businessData of businessesData) {
                 const category = yield this.categoryRepository.findOne({ where: { id: businessData.categoryId }, });
                 if (!category) {
-                    throw Error(`Category with id ${businessData.categoryId} not found.`);
+                    const error = new Error(`Category with id ${businessData.categoryId} not found.`);
+                    error.statusCode = 404;
+                    throw error;
                 }
                 // Convert keywords object to array
                 const keywordsArray = Object.values(businessData.keywords);
