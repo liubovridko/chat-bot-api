@@ -107,7 +107,6 @@ class AuthController {
     }
     remove(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            //const id = parseInt(request.params.id)
             const userToRemove = yield this.userRepository.findOneBy({ id: Number(request.params.id) });
             if (!userToRemove) {
                 const error = new Error('User not found');

@@ -42,7 +42,6 @@ class HotelController {
     }
     remove(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            //const id = parseInt(request.params.id)
             const hotelToRemove = yield this.hotelRepository.findOneBy({ id: parseInt(request.params.id) });
             if (!hotelToRemove) {
                 const error = new Error('Hotel not found');

@@ -32,7 +32,6 @@ export class HotelController {
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
-        //const id = parseInt(request.params.id)
 
         const hotelToRemove = await this.hotelRepository.findOneBy({id:parseInt(request.params.id) });
         if (!hotelToRemove) {

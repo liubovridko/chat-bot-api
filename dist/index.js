@@ -32,6 +32,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const bodyParser = __importStar(require("body-parser"));
 const morgan_1 = __importDefault(require("morgan"));
 const data_source_1 = require("./data-source");
@@ -39,12 +40,17 @@ const Routes_1 = require("./routes/Routes");
 const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
+const swaggerOptions_js_1 = __importDefault(require("./config/swaggerOptions.js"));
 function handleError(err, req, res, next) {
     res.status(err.statusCode || 500).send({ message: err.message });
 }
 data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, void 0, function* () {
     // create express app
     const app = (0, express_1.default)();
+    // Add a specific controller along the /docs route (documentation will be displayed at http://localhost:5000/api-docs/)
+    if (process.env.NODE_ENV === 'development') {
+        app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerOptions_js_1.default));
+    }
     app.use((0, cors_1.default)({ origin: '*' }));
     //  only log error responses
     app.use((0, morgan_1.default)('combined', {
@@ -56,7 +62,6 @@ data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, vo
     const uploadsPath = path_1.default.resolve(__dirname, '..', 'uploads');
     //if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath);
     const imagesPath = path_1.default.resolve(uploadsPath, 'images');
-    console.log(imagesPath);
     if (!fs_1.default.existsSync(imagesPath)) {
         fs_1.default.mkdirSync(imagesPath, { recursive: true });
     }
@@ -72,7 +77,7 @@ data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, vo
         // Add a request handler to the array
         middlewareArray.push((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
             // use for debug
-            //     console.log(`Request received: ${req.method} ${req.url}`);
+            //   console.log(`Request received: ${req.method} ${req.url}`);
             //   next();
             try {
                 const result = yield (new route.controller)[route.action](req, res, next);

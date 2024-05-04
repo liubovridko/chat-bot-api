@@ -1,4 +1,5 @@
 import  express from "express";
+import swaggerUi from "swagger-ui-express";
 import * as bodyParser from "body-parser";
 import { Request, Response } from "express";
 import  morgan from "morgan";
@@ -6,7 +7,10 @@ import { AppDataSource } from "./data-source";
 import { Routes } from "./routes/Routes";
 import  cors from "cors";
 import path from "path";
-import fs from 'fs';
+import fs from 'fs';                                                                                 
+import swaggerSpec from './config/swaggerOptions.js';
+ 
+
 
 
 
@@ -14,15 +18,24 @@ function handleError(err, req, res, next) {
   res.status(err.statusCode || 500).send({message: err.message});
 }
 
+
+
 AppDataSource.initialize().then(async () => {
 
+ 
     // create express app
     const app = express();
+
+    // Add a specific controller along the /docs route (documentation will be displayed at http://localhost:5000/api-docs/)
+    if (process.env.NODE_ENV === 'development') {
+        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+      }
     app.use(cors({ origin: '*' }));
     //  only log error responses
     app.use(morgan('combined', {
         skip: function (req, res) { return res.statusCode < 400 }
     }))
+
 
 
     app.use(bodyParser.json());
@@ -35,7 +48,7 @@ AppDataSource.initialize().then(async () => {
     //if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath);
 
     const imagesPath = path.resolve(uploadsPath, 'images');
-    console.log(imagesPath);
+   
 
     if (!fs.existsSync(imagesPath)) {
     fs.mkdirSync(imagesPath, { recursive: true });
@@ -56,7 +69,7 @@ AppDataSource.initialize().then(async () => {
         // Add a request handler to the array
         middlewareArray.push(async (req: Request, res: Response, next: Function) => {
             // use for debug
-            //     console.log(`Request received: ${req.method} ${req.url}`);
+            //   console.log(`Request received: ${req.method} ${req.url}`);
             //   next();
             try {
                 const result = await (new (route.controller as any))[route.action](req, res, next);
