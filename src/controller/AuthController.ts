@@ -15,6 +15,7 @@ export class AuthController {
     private userRepository = AppDataSource.getRepository(User)
 
     async register(request: Request, response: Response, next: NextFunction) {
+        
         const { firstName, lastName, email, password } = request.body;
 
         // check exist email
@@ -110,7 +111,6 @@ export class AuthController {
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
-        //const id = parseInt(request.params.id)
 
         const userToRemove = await this.userRepository.findOneBy({id: Number(request.params.id)});
 

@@ -117,7 +117,6 @@ class SearchController {
                 .orderBy('date', 'ASC')
                 .getRawMany();
             console.log(data);
-            // Формируем результат в требуемом формате
             data.forEach((elem) => {
                 resultData.push({ date: elem.date, count: Number(elem.count) });
             });

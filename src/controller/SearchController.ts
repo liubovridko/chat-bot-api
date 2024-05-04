@@ -124,7 +124,6 @@ export class SearchController {
       .getRawMany();
       console.log(data);
   
-    // Формируем результат в требуемом формате
     data.forEach((elem) => {
       resultData.push({ date: elem.date, count: Number(elem.count) });
     });

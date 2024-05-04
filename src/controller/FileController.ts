@@ -14,7 +14,6 @@ export class fileController {
     }
 
     const imagePath = req.body.oldImagePath;
-   // const filePath = path.resolve(oldImagePath);
     // Delete old images
     if (imagePath) {
       let fileName = path.basename(imagePath);
@@ -26,7 +25,6 @@ export class fileController {
             console.log('Old image deleted successfully:', filePath);
           } catch (error) {
             console.error('Error deleting old image:', error);
-            // Продолжаем выполнение функции, не выбрасывая ошибку
           }
         } else {
           console.warn('Old image not found:', filePath);

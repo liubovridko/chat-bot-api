@@ -43,7 +43,6 @@ class fileController {
                 throw error;
             }
             const imagePath = req.body.oldImagePath;
-            // const filePath = path.resolve(oldImagePath);
             // Delete old images
             if (imagePath) {
                 let fileName = path_1.default.basename(imagePath);
@@ -56,7 +55,6 @@ class fileController {
                     }
                     catch (error) {
                         console.error('Error deleting old image:', error);
-                        // Продолжаем выполнение функции, не выбрасывая ошибку
                     }
                 }
                 else {
