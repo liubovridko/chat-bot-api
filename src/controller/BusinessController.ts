@@ -49,7 +49,6 @@ export class BusinessController {
  async getAllAdmin(request: Request, response: Response, next: NextFunction) {
       const queryParams: QueryParams = request.query;
       const { categoryId, hotelId, page , limit , order = 'ASC', orderBy = 'id' } = queryParams;
-      const orderToUpper = order.toUpperCase();
       let query: SelectQueryBuilder<Business> = this.businessRepository
           .createQueryBuilder('business')
           .leftJoinAndSelect('business.category', 'category')
@@ -89,16 +88,23 @@ export class BusinessController {
    }
 
    async create(request: Request, response: Response, next: NextFunction) {
-         const { title, description, url, categoryId, hotelId } = request.body;
+         const { title, description, url, image, keywords, price, categoryId, hotelId } = request.body;
+      
+         const keywordsArray = keywords ? keywords.split(',').map(keyword => keyword.trim()).filter(keyword => keyword !== '') : null;
+         const parsedPrice = price !== '' ? price : null;
 
          const business = Object.assign(new Business(), {
             title,
             description,
             url,
-            categoryId,
-            hotelId
+            image,
+            keywords:keywordsArray,
+            price:parsedPrice,
+            categoryId, 
+            hotelId 
          })
          await this.businessRepository.save(business);
+         return business;
       
    }
 
@@ -113,6 +119,16 @@ export class BusinessController {
             (error as any).statusCode = 404; 
             throw error;
         }
+
+          // We divide the keywords into an array of strings, removing extra spaces
+          if (typeof request.body.keywords === 'string' && request.body.keywords.trim() !== '') {
+            let keywordsArray = request.body.keywords.split(',').map(keyword => keyword.trim());  
+            // Delete empty words
+            keywordsArray = keywordsArray.filter(keyword => keyword !== '');
+            request.body.keywords = keywordsArray;
+            } else {
+              request.body.keywords = null;
+            }
 
           this.businessRepository.merge(business, request.body);
           await this.businessRepository.save(business);
@@ -149,7 +165,7 @@ export class BusinessController {
   }
 
   async saveHotelFromJson(hotelData: any): Promise<number> {
-   console.log(hotelData)
+  
       const hotel = Object.assign(new Hotel(), {
         title: hotelData.title,
         url: hotelData.url,

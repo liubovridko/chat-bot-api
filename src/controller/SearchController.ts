@@ -122,7 +122,7 @@ export class SearchController {
       .groupBy('date')
       .orderBy('date', 'ASC')
       .getRawMany();
-      console.log(data);
+      
   
     data.forEach((elem) => {
       resultData.push({ date: elem.date, count: Number(elem.count) });
