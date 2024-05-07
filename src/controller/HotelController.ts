@@ -18,7 +18,7 @@ export class HotelController {
         return this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
     }
 
-    async save(request: Request, response: Response, next: NextFunction) {
+    async create(request: Request, response: Response, next: NextFunction) {
         const { title, url, description, chatBot_key } = request.body;
 
         const hotel = Object.assign(new Hotel(), {
@@ -30,6 +30,29 @@ export class HotelController {
 
         return this.hotelRepository.save(hotel)
     }
+
+    async update(request: Request, response: Response, next: NextFunction) {
+        try {
+            const hotel = await this.hotelRepository.findOneBy({
+              id: Number(request.params.id), 
+            });
+        
+            if (!hotel) {
+                const error = new Error('Hotel not found.');
+                (error as any).statusCode = 404; 
+                throw error;
+            }
+    
+              this.hotelRepository.merge(hotel, request.body);
+              await this.hotelRepository.save(hotel);
+              //return { message: 'Business updated successfully.' };
+              return hotel;
+          
+          } catch (error) {
+            console.error('Error updating business:', error);
+            throw Error('Failed to update business: ' + error.message);
+          }  
+       }
 
     async remove(request: Request, response: Response, next: NextFunction) {
 
