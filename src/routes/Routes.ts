@@ -256,8 +256,9 @@ export const Routes = [
     method: "delete",
     route: "/business/:id",
     controller: BusinessController,
-    action: "remove",
-    middleware: authenticateToken
+    middleware: authenticateToken,
+    action: "remove"
+    
 },
 {
     /**
@@ -444,6 +445,24 @@ export const Routes = [
 {
     /**
      * @swagger
+     * /hotels:
+     *   get:
+     *     summary: Get all hotels
+     *     description: Retrieve a list of all hotels.
+     *     responses:
+     *       200:
+     *         description: A list of hotels.
+     *       500:
+     *         description: Internal server error.
+     */
+    method: "get",
+    route: "/hotels",
+    controller: HotelController,
+    action: "all"
+},
+{
+    /**
+     * @swagger
      * /hotel/{keyBot}:
      *   get:
      *     summary: Get one hotel
@@ -472,19 +491,105 @@ export const Routes = [
     /**
      * @swagger
      * /hotels:
-     *   get:
-     *     summary: Get all hotels
-     *     description: Retrieve a list of all hotels.
+     *   post:
+     *     summary: Create a new hotel
+     *     description: Create a new hotel entity.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               title:
+     *                 type: string
+     *               description:
+     *                 type: string
+     *               url:
+     *                 type: string
+     *               chatBot_key:
+     *                 type: string
      *     responses:
      *       200:
-     *         description: A list of hotels.
+     *         description: Hotel created successfully.
+     *       400:
+     *         description: Invalid request body.
      *       500:
      *         description: Internal server error.
      */
-    method: "get",
+    method: "post",
     route: "/hotels",
     controller: HotelController,
-    action: "all"
+    middleware: authenticateToken,
+    action: "create"
+},
+{
+    /**
+     * @swagger
+     * /hotel/{id}:
+     *   put:
+     *     summary: Update a hotel by ID
+     *     description: Update a hotel by its ID.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: integer
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               title:
+     *                 type: string
+     *               description:
+     *                 type: string
+     *               url:
+     *                 type: string
+     *               chatBot_key:
+     *                 type: string
+     *     responses:
+     *       200:
+     *         description: Information about the hotel.
+     *       404:
+     *         description: Hotel not found.
+     *       500:
+     *         description: Internal server error.
+     */
+    method: "put",
+    route: "/hotels/:id",
+    controller: HotelController,
+    middleware: authenticateToken,
+    action: "update"
+},
+{
+    /**
+     * @swagger
+     * /hotels/{id}:
+     *   delete:
+     *     summary: Delete a hotel by ID
+     *     description: Delete a hotel by its ID.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: integer
+     *     responses:
+     *       200:
+     *         description: Hotel deleted successfully.
+     *       404:
+     *         description: Hotel not found.
+     */
+    method: "delete",
+    route: "/hotels/:id",
+    controller: HotelController,
+    middleware: authenticateToken,
+    action: "remove"
+    
 },
 {
     /**

@@ -111,7 +111,7 @@ export class BusinessController {
    async update(request: Request, response: Response, next: NextFunction) {
     try {
         const business = await this.businessRepository.findOneBy({
-          id: Number(request.params.id),
+          id: Number(request.params.id), 
         });
     
         if (!business) {
@@ -132,8 +132,7 @@ export class BusinessController {
 
           this.businessRepository.merge(business, request.body);
           await this.businessRepository.save(business);
-          return { message: 'Business updated successfully.' };
-      
+          return { message: 'Business updated successfully.' };    
       } catch (error) {
         console.error('Error updating business:', error);
         throw Error('Failed to update business: ' + error.message);
@@ -150,7 +149,7 @@ export class BusinessController {
               (error as any).statusCode = 404; 
               throw error;
            }
-            await this.businessRepository.remove(business);
+          await this.businessRepository.remove(business);
      
    }
 

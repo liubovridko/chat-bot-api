@@ -28,7 +28,7 @@ class HotelController {
             return this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
         });
     }
-    save(request, response, next) {
+    create(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const { title, url, description, chatBot_key } = request.body;
             const hotel = Object.assign(new Hotel_1.Hotel(), {
@@ -38,6 +38,28 @@ class HotelController {
                 chatBot_key
             });
             return this.hotelRepository.save(hotel);
+        });
+    }
+    update(request, response, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const hotel = yield this.hotelRepository.findOneBy({
+                    id: Number(request.params.id),
+                });
+                if (!hotel) {
+                    const error = new Error('Hotel not found.');
+                    error.statusCode = 404;
+                    throw error;
+                }
+                this.hotelRepository.merge(hotel, request.body);
+                yield this.hotelRepository.save(hotel);
+                //return { message: 'Business updated successfully.' };
+                return hotel;
+            }
+            catch (error) {
+                console.error('Error updating business:', error);
+                throw Error('Failed to update business: ' + error.message);
+            }
         });
     }
     remove(request, response, next) {
