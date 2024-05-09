@@ -30,7 +30,8 @@ AppDataSource.initialize().then(async () => {
     if (process.env.NODE_ENV === 'development') {
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
       }
-    app.use(cors({ origin: '*' }));
+    //app.use(cors({ origin: '*' }));
+    app.use(cors({ origin: 'http://localhost:3000' }));
     //  only log error responses
     app.use(morgan('combined', {
         skip: function (req, res) { return res.statusCode < 400 }
