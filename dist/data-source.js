@@ -24,9 +24,9 @@ const options = {
     migrationsTableName: "migration_table",
     subscribers: [],
     seeds: ['src/database/seeds/**/*{.ts,.js}'],
-    // ssl: {
-    //      rejectUnauthorized: Boolean(process.env.POSTGRES_SSL_ENABLED),
-    // },
+    ssl: {
+        rejectUnauthorized: Boolean(process.env.POSTGRES_SSL_ENABLED),
+    },
 };
 exports.AppDataSource = new typeorm_1.DataSource(options);
 //# sourceMappingURL=data-source.js.map
