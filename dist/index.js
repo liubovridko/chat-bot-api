@@ -51,7 +51,8 @@ data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, vo
     if (process.env.NODE_ENV === 'development') {
         app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerOptions_js_1.default));
     }
-    app.use((0, cors_1.default)({ origin: '*' }));
+    //app.use(cors({ origin: '*' }));
+    app.use((0, cors_1.default)({ origin: 'http://localhost:3000' }));
     //  only log error responses
     app.use((0, morgan_1.default)('combined', {
         skip: function (req, res) { return res.statusCode < 400; }
