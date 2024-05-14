@@ -1,6 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, AfterLoad } from 'typeorm';
 import { Business } from './Business';
+import { Review } from './Review';
 import { SearchQuery } from './SearchQuery';
+import { HotelAmenities } from './HotelAmenities';
 
 @Entity()
 export class Hotel {
@@ -14,13 +16,22 @@ export class Hotel {
   url: string;
 
   @Column({nullable: true})
-  description: string;
+  wifi_name: string;
 
-  @Column({type:'varchar', array: true, nullable: true} )
-  keywords: string[];
+  @Column({ nullable: true} )
+  wifi_password: string;
 
   @Column({nullable: true})
-  price: number;
+  front_desk_number: string;
+
+  @Column({nullable: true})
+  check_in_time: string;
+
+  @Column({nullable: true})
+  check_out_time: string;
+
+  @Column({type: 'int', default: 0})
+  rating: number;
 
   @Column({unique:true})
   chatBot_key: string;
@@ -30,5 +41,22 @@ export class Hotel {
 
   @OneToMany(() => SearchQuery, searchQuery => searchQuery.hotel)
   searchQueries: SearchQuery[];
+
+  @OneToMany(()=> HotelAmenities, amenities => amenities.hotel)
+  amenities: HotelAmenities[];
+
+  @OneToMany(() => Review, review => review.hotel)
+  reviews: Review[];
+
+  @AfterLoad()
+  updateRating(){
+     if (this.reviews && this.reviews.length > 0){
+      const totalRating = this.reviews.reduce((acc,curr) => acc + curr.rating, 0);
+      const averageRating = totalRating / this.reviews.length;
+      this.rating = Math.round(averageRating);
+    } else {
+      this.rating = 0;
+    }
+  }
 
 }

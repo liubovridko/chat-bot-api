@@ -4,6 +4,7 @@ import { Category } from "../entity/Category";
 import { NextFunction, Request, Response } from "express";
 import * as jsonData from '../database/business.json';
 import { Hotel } from "../entity/Hotel";
+import { HotelAmenities } from "../entity/HotelAmenities";
 import { SelectQueryBuilder } from "typeorm";
 
 
@@ -23,6 +24,7 @@ export class BusinessController {
     private businessRepository = AppDataSource.getRepository(Business);
     private categoryRepository = AppDataSource.getRepository(Category);
     private hotelRepository = AppDataSource.getRepository(Hotel);
+    private hotelAmenitiesRepository = AppDataSource.getRepository(HotelAmenities);
 
 
    async getAll(request: Request, response: Response, next: NextFunction) {
@@ -156,7 +158,11 @@ export class BusinessController {
   async parseBusiness(request: Request, response: Response, next: NextFunction) {
     try {
       const hotelId = await this.saveHotelFromJson(jsonData.hotel);
-      await this.saveBusinessesFromJson(jsonData, hotelId);
+      // Execute saveHotelAmenitieslFromJson and saveBusinessesFromJson concurrently
+      await Promise.all([
+        await this.saveHotelAmenitieslFromJson(jsonData.hotel.amenities, hotelId),
+        await this.saveBusinessesFromJson(jsonData, hotelId),
+      ]);
       return { message: 'Businesses saved successfully.' };
      } catch (error) {
       throw Error('Failed to save businesses: ' + error.message);
@@ -168,14 +174,34 @@ export class BusinessController {
       const hotel = Object.assign(new Hotel(), {
         title: hotelData.title,
         url: hotelData.url,
-        description: hotelData.description,
-        chatBot_key: hotelData.chatBot_key,
-        keywords: hotelData.keywords
+        wifi_name: hotelData.wifi.name,
+        wifi_password: hotelData.wifi.password,
+        front_desk_number: hotelData.phone,
+        check_in_time: hotelData.checkIn,
+        check_out_time: hotelData.checkOut,
+        chatBot_key: hotelData.chatBot_key
     });
    
     // Save hotel and return hotelId
     const savedHotel = await this.hotelRepository.save(hotel);
     return savedHotel.id;
+}
+
+async saveHotelAmenitieslFromJson(amenitiesData: any, hotelId: number): Promise<void> {
+  
+    for (const amenityType in amenitiesData) {
+      if (amenitiesData.hasOwnProperty(amenityType)) {
+          const amenity = amenitiesData[amenityType];
+          const amenityData = this.hotelAmenitiesRepository.create({
+              amenity_type: amenityType,
+              available: amenity.available,
+              hours: amenity.hours,
+              hotelId: hotelId
+          });
+          await this.hotelAmenitiesRepository.save(amenityData);
+      }
+  }
+
 }
 
     async saveBusinessesFromJson(data: any, hotelId: number) {

@@ -6,6 +6,8 @@ import { SearchQuery } from "./entity/SearchQuery"
 import { Business } from "./entity/Business"
 import { Category } from "./entity/Category"
 import { Hotel } from "./entity/Hotel"
+import { Review } from './entity/Review';
+import { HotelAmenities } from './entity/HotelAmenities';
 import { SeederOptions } from 'typeorm-extension'
 
 const port = Number(process.env.POSTGRES_PORT);
@@ -19,7 +21,7 @@ const options: DataSourceOptions & SeederOptions = {
     database: process.env.POSTGRES_DATABASE,
     synchronize: Boolean(process.env.PORSTRES_SYNCHRONIZE),
     logging: false,
-    entities: [User, Hotel, Category, Business, SearchQuery],
+    entities: [User, Hotel, Category, Business, SearchQuery, Review, HotelAmenities],
     migrations: ["src/migrations/**/*{.ts,.js}"],
     migrationsTableName: "migration_table",
     subscribers: [],

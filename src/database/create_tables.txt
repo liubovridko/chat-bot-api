@@ -13,10 +13,20 @@ CREATE TABLE "hotel" (
     "id" SERIAL PRIMARY KEY,
     "title" VARCHAR NOT NULL,
     "url" VARCHAR,
-    "description" VARCHAR,
-    "keywords" VARCHAR[],
-    "price" INT,
+    wifi_name VARCHAR(10),
+    wifi_password VARCHAR(50),
+    front_desk_number VARCHAR(20),
+    check_in_time TIME,
+    check_out_time TIME,
     "chatBot_key" VARCHAR NOT NULL
+);
+
+CREATE TABLE amenities (
+    id SERIAL PRIMARY KEY,
+    hotel_id INT REFERENCES hotel_information(id),
+    amenity_type VARCHAR(20),
+    available BOOLEAN,
+    hours VARCHAR(50)
 );
 
 -- Create Category table

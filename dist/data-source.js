@@ -9,6 +9,8 @@ const SearchQuery_1 = require("./entity/SearchQuery");
 const Business_1 = require("./entity/Business");
 const Category_1 = require("./entity/Category");
 const Hotel_1 = require("./entity/Hotel");
+const Review_1 = require("./entity/Review");
+const HotelAmenities_1 = require("./entity/HotelAmenities");
 const port = Number(process.env.POSTGRES_PORT);
 const options = {
     type: 'postgres',
@@ -19,7 +21,7 @@ const options = {
     database: process.env.POSTGRES_DATABASE,
     synchronize: Boolean(process.env.PORSTRES_SYNCHRONIZE),
     logging: false,
-    entities: [User_1.User, Hotel_1.Hotel, Category_1.Category, Business_1.Business, SearchQuery_1.SearchQuery],
+    entities: [User_1.User, Hotel_1.Hotel, Category_1.Category, Business_1.Business, SearchQuery_1.SearchQuery, Review_1.Review, HotelAmenities_1.HotelAmenities],
     migrations: ["src/migrations/**/*{.ts,.js}"],
     migrationsTableName: "migration_table",
     subscribers: [],
