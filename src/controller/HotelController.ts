@@ -19,12 +19,16 @@ export class HotelController {
     }
 
     async create(request: Request, response: Response, next: NextFunction) {
-        const { title, url, description, chatBot_key } = request.body;
+        const { title, url, wifi_name, wifi_password, front_desk_number, check_in_time, check_out_time, chatBot_key } = request.body;
 
         const hotel = Object.assign(new Hotel(), {
             title,
             url,
-            description,
+            wifi_name,
+            wifi_password,
+            front_desk_number,
+            check_in_time,
+            check_out_time,
             chatBot_key
         })
 

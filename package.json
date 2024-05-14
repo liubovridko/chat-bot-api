@@ -51,8 +51,8 @@
       "ts.check": "tsc --project tsconfig.json",
       "add-build": "git add dist",
       "lint": "eslint \"src/**/*.ts\" --fix",
-      "migration:create": "typeorm migration:create -d ./src/data-source.ts ./src/migrations/default",
-      "migration:generate": "typeorm migration:generate -d ./src/data-source.ts -n PostRefactoring",
+      "migration:create": "typeorm migration:create -d ./src/data-source.ts ./src/migrations",
+      "migration:generate": "typeorm -d ./src/data-source.ts migration:generate ./src/migrations/<nameMigration>",
       "migration:run": "npx typeorm-ts-node-commonjs migration:run -d ./src/data-source.ts",
       "migration:revert": "npx typeorm-ts-node-commonjs migration:revert -d ./src/data-source.ts",
       "seed:run": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run"

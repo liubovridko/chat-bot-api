@@ -34,11 +34,13 @@ const Business_1 = require("../entity/Business");
 const Category_1 = require("../entity/Category");
 const jsonData = __importStar(require("../database/business.json"));
 const Hotel_1 = require("../entity/Hotel");
+const HotelAmenities_1 = require("../entity/HotelAmenities");
 class BusinessController {
     constructor() {
         this.businessRepository = data_source_1.AppDataSource.getRepository(Business_1.Business);
         this.categoryRepository = data_source_1.AppDataSource.getRepository(Category_1.Category);
         this.hotelRepository = data_source_1.AppDataSource.getRepository(Hotel_1.Hotel);
+        this.hotelAmenitiesRepository = data_source_1.AppDataSource.getRepository(HotelAmenities_1.HotelAmenities);
     }
     getAll(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -161,7 +163,11 @@ class BusinessController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const hotelId = yield this.saveHotelFromJson(jsonData.hotel);
-                yield this.saveBusinessesFromJson(jsonData, hotelId);
+                // Execute saveHotelAmenitieslFromJson and saveBusinessesFromJson concurrently
+                yield Promise.all([
+                    yield this.saveHotelAmenitieslFromJson(jsonData.hotel.amenities, hotelId),
+                    yield this.saveBusinessesFromJson(jsonData, hotelId),
+                ]);
                 return { message: 'Businesses saved successfully.' };
             }
             catch (error) {
@@ -174,13 +180,32 @@ class BusinessController {
             const hotel = Object.assign(new Hotel_1.Hotel(), {
                 title: hotelData.title,
                 url: hotelData.url,
-                description: hotelData.description,
-                chatBot_key: hotelData.chatBot_key,
-                keywords: hotelData.keywords
+                wifi_name: hotelData.wifi.name,
+                wifi_password: hotelData.wifi.password,
+                front_desk_number: hotelData.phone,
+                check_in_time: hotelData.checkIn,
+                check_out_time: hotelData.checkOut,
+                chatBot_key: hotelData.chatBot_key
             });
             // Save hotel and return hotelId
             const savedHotel = yield this.hotelRepository.save(hotel);
             return savedHotel.id;
+        });
+    }
+    saveHotelAmenitieslFromJson(amenitiesData, hotelId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            for (const amenityType in amenitiesData) {
+                if (amenitiesData.hasOwnProperty(amenityType)) {
+                    const amenity = amenitiesData[amenityType];
+                    const amenityData = this.hotelAmenitiesRepository.create({
+                        amenity_type: amenityType,
+                        available: amenity.available,
+                        hours: amenity.hours,
+                        hotelId: hotelId
+                    });
+                    yield this.hotelAmenitiesRepository.save(amenityData);
+                }
+            }
         });
     }
     saveBusinessesFromJson(data, hotelId) {

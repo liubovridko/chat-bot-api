@@ -3,6 +3,8 @@ import { AuthController } from "../controller/AuthController";
 import { HotelController } from "../controller/HotelController";
 import { SearchController } from "../controller/SearchController";
 import { CategoryController } from "../controller/CategoryController";
+import { ReviewController } from "../controller/ReviewController";
+import { HotelAmenitiesController } from "../controller/HotelAmenitiesController"; 
 import { authenticateToken } from '../middleware/authenticateToken';
 import { fileController } from '../controller/FileController';
 import { upload } from '../middleware/uploadFile';
@@ -503,9 +505,17 @@ export const Routes = [
      *             properties:
      *               title:
      *                 type: string
-     *               description:
-     *                 type: string
      *               url:
+     *                 type: string
+     *               wifi_name:
+     *                 type: string
+     *               wifi_password:
+     *                 type: string
+     *               front_desk_number:
+     *                 type: string
+     *               check_in_time:
+     *                 type: string
+     *               check_out_time:
      *                 type: string
      *               chatBot_key:
      *                 type: string
@@ -545,9 +555,17 @@ export const Routes = [
      *             properties:
      *               title:
      *                 type: string
-     *               description:
+    *                url:
      *                 type: string
-     *               url:
+     *               wifi_name:
+     *                 type: string
+     *               wifi_password:
+     *                 type: string
+     *               front_desk_number:
+     *                 type: string
+     *               check_in_time:
+     *                 type: string
+     *               check_out_time:
      *                 type: string
      *               chatBot_key:
      *                 type: string
@@ -608,6 +626,179 @@ export const Routes = [
     route: "/categories",
     controller: CategoryController,
     action: "all"
+},
+{
+    /**
+     * @swagger
+     * /reviews:
+     *   get:
+     *     summary: Get all reviews
+     *     description: Retrieve a list of all reviews.
+     *     responses:
+     *       200:
+     *         description: A list of reviews.
+     */
+    method: "get",
+    route: "/reviews",
+    controller: ReviewController,
+    middleware: authenticateToken,
+    action: "all"
+},
+{
+    /**
+     * @swagger
+     * /hotels:
+     *   post:
+     *     summary: Create a new review
+     *     description: Create a new review entity.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               rating:
+     *                 type: number
+     *               userName:
+     *                 type: string
+     *               textReview:
+     *                 type: string
+     *     responses:
+     *       200:
+     *         description: Review created successfully.
+     *       400:
+     *         description: Invalid request body.
+     *       500:
+     *         description: Internal server error.
+     */
+    method: "post",
+    route: "/add-review/:keyBot",
+    controller: ReviewController,
+    action: "create"
+},
+{
+    /**
+     * @swagger
+     * /amenities:
+     *   get:
+     *     summary: Get all hotel amenities
+     *     description: Retrieve a list of all amenities.
+     *     responses:
+     *       200:
+     *         description: A list of amenities.
+     */
+    method: "get",
+    route: "/hotels/amenities",
+    controller: HotelAmenitiesController,
+    middleware: authenticateToken,
+    action: "getAll"
+},
+{
+    /**
+     * @swagger
+     * /amenities/{id}:
+     *   get:
+     *     summary: Get one amenity
+     *     description: Retrieve information about a specific amenity.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           description: id of the amenity to retrieve.
+     *     responses:
+     *       200:
+     *         description: Information about the amenity.
+     *       404:
+     *         description: Amenity not found.
+     *       500:
+     *         description: Internal server error.
+     */
+    method: "get",
+    route: "/hotels/amenities/:id",
+    controller: HotelAmenitiesController,
+    middleware: authenticateToken,
+    action: "getOne"
+},
+{
+    /**
+     * @swagger
+     * /amenities:
+     *   post:
+     *     summary: Create a new amenities
+     *     description: Create a new amenities entity.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               amenity_type:
+     *                 type: string
+     *               available:
+     *                 type: boolean
+     *               hours:
+     *                 type: string
+     *               hotelId:
+     *                 type: integer
+     *     responses:
+     *       200:
+     *         description: Amenities created successfully.
+     *       400:
+     *         description: Invalid request body.
+     *       500:
+     *         description: Internal server error.
+     */
+    method: "post",
+    route: "/hotels/amenities",
+    controller: HotelAmenitiesController,
+    middleware: authenticateToken,
+    action: "create"
+},
+{
+    /**
+     * @swagger
+     * /amenities/{id}:
+     *   put:
+     *     summary: Update an amenity by ID
+     *     description: Update an amenity by its ID.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: integer
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+   *                 amenity_type:
+     *                 type: string
+     *               available:
+     *                 type: boolean
+     *               hours:
+     *                 type: string
+     *               hotelId:
+     *                 type: integer
+     *     responses:
+     *       200:
+     *         description: Information about the amenity.
+     *       404:
+     *         description: Amenity not found.
+     *       500:
+     *         description: Internal server error.
+     */
+    method: "put",
+    route: "/hotels/amenities/:id",
+    controller: HotelAmenitiesController,
+    middleware: authenticateToken,
+    action: "update"
 },
 ]
  

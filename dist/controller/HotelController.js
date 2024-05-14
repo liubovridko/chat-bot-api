@@ -30,11 +30,15 @@ class HotelController {
     }
     create(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { title, url, description, chatBot_key } = request.body;
+            const { title, url, wifi_name, wifi_password, front_desk_number, check_in_time, check_out_time, chatBot_key } = request.body;
             const hotel = Object.assign(new Hotel_1.Hotel(), {
                 title,
                 url,
-                description,
+                wifi_name,
+                wifi_password,
+                front_desk_number,
+                check_in_time,
+                check_out_time,
                 chatBot_key
             });
             return this.hotelRepository.save(hotel);
