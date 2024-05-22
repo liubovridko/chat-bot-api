@@ -18,7 +18,12 @@ class HotelAmenitiesController {
     }
     getAll(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.amenitiesRepository.find({ relations: { hotel: true } });
+            const amenitiesQuery = yield this.amenitiesRepository
+                .createQueryBuilder('amenities')
+                .leftJoinAndSelect('amenities.hotel', 'hotel')
+                .orderBy('amenities.id', 'ASC')
+                .getMany();
+            return amenitiesQuery;
         });
     }
     getOne(request, response, next) {
@@ -37,11 +42,12 @@ class HotelAmenitiesController {
             const { amenity_type, available, hours, hotelId } = request.body;
             const amenity = Object.assign(new HotelAmenities_1.HotelAmenities(), {
                 amenity_type,
-                available: available === 'true' ? true : false,
+                available,
                 hours,
                 hotelId
             });
-            return this.amenitiesRepository.save(amenity);
+            yield this.amenitiesRepository.save(amenity);
+            return this.amenitiesRepository.findOne({ where: { id: amenity.id }, relations: ['hotel'] });
         });
     }
     update(request, response, next) {
@@ -55,7 +61,7 @@ class HotelAmenitiesController {
                 }
                 this.amenitiesRepository.merge(amenity, request.body);
                 yield this.amenitiesRepository.save(amenity);
-                return amenity;
+                return this.amenitiesRepository.findOne({ where: { id: amenity.id }, relations: ['hotel'] });
             }
             catch (error) {
                 console.log('Erorr updating hotel amenity: ', error);

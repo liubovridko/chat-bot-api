@@ -18,14 +18,14 @@ class HotelController {
     }
     all(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.hotelRepository.find();
+            return this.hotelRepository.find({ order: { id: 'ASC' } });
         });
     }
     one(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const queryParams = request.query;
-            const { keyBot = "chatbot1" } = queryParams;
-            return this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
+            const queryParams = request.params;
+            const { keyBot } = queryParams;
+            return this.hotelRepository.findOne({ where: { chatBot_key: keyBot }, relations: ['amenities'] });
         });
     }
     create(request, response, next) {

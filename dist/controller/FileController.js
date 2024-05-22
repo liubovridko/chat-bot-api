@@ -64,8 +64,12 @@ class fileController {
             else {
                 console.warn('No old image path provided.');
             }
+            let fileUrl = '';
+            const file = req.file;
+            fileUrl = `/uploads/images/${file.filename}`;
+            const fullUrl = `${req.protocol}://${req.get('host')}${fileUrl}`;
             return {
-                url: `/uploads/images/${req.file.filename}`,
+                url: fullUrl,
             };
         });
     }

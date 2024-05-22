@@ -71,20 +71,34 @@ class InitialMigration1713000348434 {
                         isNullable: true,
                     },
                     {
-                        name: "description",
+                        name: "wifi_name",
                         type: "varchar",
                         isNullable: true,
                     },
                     {
-                        name: "keywords",
+                        name: "wifi_password",
                         type: "varchar",
-                        isArray: true,
                         isNullable: true,
                     },
                     {
-                        name: "price",
+                        name: "front_desk_number",
+                        type: "varchar",
+                        isNullable: true,
+                    },
+                    {
+                        name: "check_in_time",
+                        type: "varchar",
+                        isNullable: true,
+                    },
+                    {
+                        name: "check_out_time",
+                        type: "varchar",
+                        isNullable: true,
+                    },
+                    {
+                        name: "rating",
                         type: "int",
-                        isNullable: true,
+                        default: 0
                     },
                     {
                         name: "chatBot_key",

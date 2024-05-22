@@ -32,10 +32,15 @@ export class fileController {
       } else {
         console.warn('No old image path provided.');
       }
+
+      let fileUrl = '';
+      const file = req.file as Express.Multer.File;
+      fileUrl = `/uploads/images/${file.filename}`;
+      const fullUrl = `${req.protocol}://${req.get('host')}${fileUrl}`;
   
 
     return  {
-          url: `/uploads/images/${req.file.filename}`,
+          url:fullUrl,
       }; 
 
    }

@@ -553,7 +553,7 @@ exports.Routes = [
          *             properties:
          *               title:
          *                 type: string
-        *                url:
+         *               url:
          *                 type: string
          *               wifi_name:
          *                 type: string
@@ -677,7 +677,7 @@ exports.Routes = [
     {
         /**
          * @swagger
-         * /amenities:
+         * /hotels/amenities:
          *   get:
          *     summary: Get all hotel amenities
          *     description: Retrieve a list of all amenities.
@@ -694,7 +694,7 @@ exports.Routes = [
     {
         /**
          * @swagger
-         * /amenities/{id}:
+         * /hotels/amenities/{id}:
          *   get:
          *     summary: Get one amenity
          *     description: Retrieve information about a specific amenity.
@@ -722,7 +722,7 @@ exports.Routes = [
     {
         /**
          * @swagger
-         * /amenities:
+         * /hotels/amenities:
          *   post:
          *     summary: Create a new amenities
          *     description: Create a new amenities entity.
@@ -758,7 +758,7 @@ exports.Routes = [
     {
         /**
          * @swagger
-         * /amenities/{id}:
+         * /hotels/amenities/{id}:
          *   put:
          *     summary: Update an amenity by ID
          *     description: Update an amenity by its ID.
@@ -775,7 +775,7 @@ exports.Routes = [
          *           schema:
          *             type: object
          *             properties:
-       *                 amenity_type:
+         *               amenity_type:
          *                 type: string
          *               available:
          *                 type: boolean
@@ -796,6 +796,31 @@ exports.Routes = [
         controller: HotelAmenitiesController_1.HotelAmenitiesController,
         middleware: authenticateToken_1.authenticateToken,
         action: "update"
+    },
+    {
+        /**
+         * @swagger
+         * /hotels/amenities/{id}:
+         *   delete:
+         *     summary: Delete an amenity by ID
+         *     description: Delete an amenity by its ID.
+         *     parameters:
+         *       - in: path
+         *         name: id
+         *         required: true
+         *         schema:
+         *           type: integer
+         *     responses:
+         *       200:
+         *         description: Hotel amenity has been removed.
+         *       404:
+         *         description: Hotel amenity not found.
+         */
+        method: "delete",
+        route: "/hotels/amenities/:id",
+        controller: HotelAmenitiesController_1.HotelAmenitiesController,
+        middleware: authenticateToken_1.authenticateToken,
+        action: "remove"
     },
 ];
 //# sourceMappingURL=Routes.js.map

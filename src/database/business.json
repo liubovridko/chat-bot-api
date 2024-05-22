@@ -8,16 +8,16 @@
             "password": "Bohemian123"
           },
           "amenities": {
-            "pool": {
-              "available": "true",
+            "Pool": {
+              "available": true,
               "hours": "7:00 AM - 10:00 PM"
             },
-            "gym": {
-              "available": "true",
+            "Gym": {
+              "available": true,
               "hours": "24 Hours"
             },
-            "spa": {
-              "available": "false",
+            "Spa": {
+              "available": false,
               "hours": "N/A"
             }
           },

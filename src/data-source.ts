@@ -26,9 +26,9 @@ const options: DataSourceOptions & SeederOptions = {
     migrationsTableName: "migration_table",
     subscribers: [],
     seeds: ['src/database/seeds/**/*{.ts,.js}'],
-   ssl: {
-        rejectUnauthorized: Boolean(process.env.POSTGRES_SSL_ENABLED),
-     },
+//    ssl: {
+//         rejectUnauthorized: Boolean(process.env.POSTGRES_SSL_ENABLED),
+//      },
 }
 
 export const AppDataSource  = new DataSource(options)

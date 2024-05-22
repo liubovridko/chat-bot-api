@@ -8,6 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Hotel = void 0;
 const typeorm_1 = require("typeorm");
@@ -16,15 +25,13 @@ const Review_1 = require("./Review");
 const SearchQuery_1 = require("./SearchQuery");
 const HotelAmenities_1 = require("./HotelAmenities");
 let Hotel = class Hotel {
-    updateRating() {
-        if (this.reviews && this.reviews.length > 0) {
-            const totalRating = this.reviews.reduce((acc, curr) => acc + curr.rating, 0);
-            const averageRating = totalRating / this.reviews.length;
+    updateRating(newRating) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const totalReviews = this.reviews.length + 1;
+            const totalRating = this.reviews.reduce((acc, curr) => acc + (curr.rating || 0), 0) + newRating;
+            const averageRating = totalRating / totalReviews;
             this.rating = Math.round(averageRating);
-        }
-        else {
-            this.rating = 0;
-        }
+        });
     }
 };
 __decorate([
@@ -83,12 +90,6 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Review_1.Review, review => review.hotel),
     __metadata("design:type", Array)
 ], Hotel.prototype, "reviews", void 0);
-__decorate([
-    (0, typeorm_1.AfterLoad)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], Hotel.prototype, "updateRating", null);
 Hotel = __decorate([
     (0, typeorm_1.Entity)()
 ], Hotel);
