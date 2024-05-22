@@ -9,13 +9,14 @@ export class HotelController {
 
     async all(request: Request, response: Response, next: NextFunction) {
        
-        return this.hotelRepository.find();
+        return this.hotelRepository.find({order:{id: 'ASC'}});
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
-        const queryParams: QueryParams = request.query;
-        const { keyBot = "chatbot1" } = queryParams;
-        return this.hotelRepository.findOne({ where: { chatBot_key: keyBot } });
+        const queryParams: QueryParams = request.params;
+        const { keyBot } = queryParams;
+     
+        return this.hotelRepository.findOne({ where: { chatBot_key: keyBot }, relations:['amenities'] });
     }
 
     async create(request: Request, response: Response, next: NextFunction) {

@@ -30,7 +30,7 @@ export class ReviewController {
    }
 
    async create(request: Request, response: Response, next: NextFunction){
-      const { keyBot = "chatbot1"} = request.params;
+      const { keyBot } = request.params;
 
       const { rating, userName, textReview } = request.body;
       const hotel = await this.hotelRepository.findOne({

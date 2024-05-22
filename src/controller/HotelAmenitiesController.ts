@@ -7,7 +7,13 @@ export class HotelAmenitiesController {
    private amenitiesRepository = AppDataSource.getRepository(HotelAmenities);
 
    async getAll(request: Request, response: Response, next: NextFunction) {
-     return this.amenitiesRepository.find({relations:{hotel:true}});
+
+     const amenitiesQuery = await this.amenitiesRepository
+     .createQueryBuilder('amenities')
+     .leftJoinAndSelect('amenities.hotel', 'hotel')
+     .orderBy('amenities.id', 'ASC')
+     .getMany();
+      return amenitiesQuery;
    }
 
    async getOne(request: Request, response: Response, next: NextFunction) {
@@ -26,12 +32,13 @@ export class HotelAmenitiesController {
       const { amenity_type, available, hours, hotelId } = request.body;
       const amenity = Object.assign( new HotelAmenities(), {
          amenity_type,
-         available: available === 'true'? true : false,
+         available,
          hours,
          hotelId
       });
 
-      return this.amenitiesRepository.save(amenity);
+      await this.amenitiesRepository.save(amenity);
+      return this.amenitiesRepository.findOne({ where:{id:amenity.id}, relations: ['hotel']});
    }
 
    async update(request: Request, response: Response, next: NextFunction) {
@@ -44,7 +51,7 @@ export class HotelAmenitiesController {
          }
          this.amenitiesRepository.merge(amenity, request.body);
          await this.amenitiesRepository.save(amenity);
-         return amenity;
+         return this.amenitiesRepository.findOne({ where:{id:amenity.id}, relations: ['hotel']});
          
       } catch (error) {
          console.log('Erorr updating hotel amenity: ', error);

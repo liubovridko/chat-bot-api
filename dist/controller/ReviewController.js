@@ -44,7 +44,7 @@ class ReviewController {
     }
     create(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { keyBot = "chatbot1" } = request.params;
+            const { keyBot } = request.params;
             const { rating, userName, textReview } = request.body;
             const hotel = yield this.hotelRepository.findOne({
                 where: { chatBot_key: keyBot }
