@@ -99,7 +99,7 @@ class BusinessController {
     create(request, response, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const { title, description, url, image, keywords, price, categoryId, hotelId } = request.body;
-            const keywordsArray = keywords ? keywords.split(',').map(keyword => keyword.trim()).filter(keyword => keyword !== '') : null;
+            const keywordsArray = keywords ? keywords.split(',').map((keyword) => keyword.trim()).filter((keyword) => keyword !== '') : null;
             const parsedPrice = price !== '' ? price : null;
             const business = Object.assign(new Business_1.Business(), {
                 title,
@@ -128,9 +128,9 @@ class BusinessController {
                 }
                 // We divide the keywords into an array of strings, removing extra spaces
                 if (typeof request.body.keywords === 'string' && request.body.keywords.trim() !== '') {
-                    let keywordsArray = request.body.keywords.split(',').map(keyword => keyword.trim());
+                    let keywordsArray = request.body.keywords.split(',').map((keyword) => keyword.trim());
                     // Delete empty words
-                    keywordsArray = keywordsArray.filter(keyword => keyword !== '');
+                    keywordsArray = keywordsArray.filter((keyword) => keyword !== '');
                     request.body.keywords = keywordsArray;
                 }
                 else {
@@ -211,10 +211,10 @@ class BusinessController {
     saveBusinessesFromJson(data, hotelId) {
         return __awaiter(this, void 0, void 0, function* () {
             const businessesData = [
-                ...data.restaurants.map(b => (Object.assign(Object.assign({}, b), { categoryId: 1 }))),
-                ...data.drinks.map(b => (Object.assign(Object.assign({}, b), { categoryId: 2 }))),
-                ...data.activities.map(b => (Object.assign(Object.assign({}, b), { categoryId: 3 }))),
-                ...data.other.map(b => (Object.assign(Object.assign({}, b), { categoryId: 4 }))),
+                ...data.restaurants.map((b) => (Object.assign(Object.assign({}, b), { categoryId: 1 }))),
+                ...data.drinks.map((b) => (Object.assign(Object.assign({}, b), { categoryId: 2 }))),
+                ...data.activities.map((b) => (Object.assign(Object.assign({}, b), { categoryId: 3 }))),
+                ...data.other.map((b) => (Object.assign(Object.assign({}, b), { categoryId: 4 }))),
             ];
             for (const businessData of businessesData) {
                 const category = yield this.categoryRepository.findOne({ where: { id: businessData.categoryId }, });

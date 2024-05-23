@@ -1,7 +1,7 @@
 import  express from "express";
 import swaggerUi from "swagger-ui-express";
 import * as bodyParser from "body-parser";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import  morgan from "morgan";
 import { AppDataSource } from "./data-source";
 import { Routes } from "./routes/Routes";
@@ -14,7 +14,7 @@ import swaggerSpec from './config/swaggerOptions.js';
 
 
 
-function handleError(err, req, res, next) {
+function handleError(err: any, req: Request, res: Response, next: NextFunction) {
   res.status(err.statusCode || 500).send({message: err.message});
 }
 

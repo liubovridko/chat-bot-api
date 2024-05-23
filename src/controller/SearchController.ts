@@ -102,7 +102,7 @@ export class SearchController {
   }
 
   public async getSearchQueryStatistic(request:  Request<any, any, any, IQueryParams>, response: Response, next: NextFunction) {
-    const resultData = [];
+    const resultData: any[] = [];
     const startDate = new Date(request.query.startDate);
     startDate.setHours(0, 0, 0, 0); 
     const endDate = new Date(request.query.endDate);
