@@ -92,7 +92,7 @@ export class BusinessController {
    async create(request: Request, response: Response, next: NextFunction) {
          const { title, description, url, image, keywords, price, categoryId, hotelId } = request.body;
       
-         const keywordsArray = keywords ? keywords.split(',').map(keyword => keyword.trim()).filter(keyword => keyword !== '') : null;
+         const keywordsArray = keywords ? keywords.split(',').map((keyword: string) => keyword.trim()).filter((keyword: string) => keyword !== '') : null;
          const parsedPrice = price !== '' ? price : null;
 
          const business = Object.assign(new Business(), {
@@ -124,9 +124,9 @@ export class BusinessController {
 
           // We divide the keywords into an array of strings, removing extra spaces
           if (typeof request.body.keywords === 'string' && request.body.keywords.trim() !== '') {
-            let keywordsArray = request.body.keywords.split(',').map(keyword => keyword.trim());  
+            let keywordsArray = request.body.keywords.split(',').map((keyword :string) => keyword.trim());  
             // Delete empty words
-            keywordsArray = keywordsArray.filter(keyword => keyword !== '');
+            keywordsArray = keywordsArray.filter((keyword: string) => keyword !== '');
             request.body.keywords = keywordsArray;
             } else {
               request.body.keywords = null;
@@ -206,10 +206,10 @@ async saveHotelAmenitieslFromJson(amenitiesData: any, hotelId: number): Promise<
 
     async saveBusinessesFromJson(data: any, hotelId: number) {
         const businessesData = [
-            ...data.restaurants.map(b => ({ ...b, categoryId: 1 })),
-            ...data.drinks.map(b => ({ ...b, categoryId: 2 })),
-            ...data.activities.map(b => ({ ...b, categoryId: 3 })),
-            ...data.other.map(b => ({ ...b, categoryId: 4 })),
+            ...data.restaurants.map((b: any) => ({ ...b, categoryId: 1 })),
+            ...data.drinks.map((b: any) => ({ ...b, categoryId: 2 })),
+            ...data.activities.map((b: any) => ({ ...b, categoryId: 3 })),
+            ...data.other.map((b: any) => ({ ...b, categoryId: 4 })),
         ];
 
         for (const businessData of businessesData) {

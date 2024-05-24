@@ -48,7 +48,7 @@ data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, vo
     // create express app
     const app = (0, express_1.default)();
     // Add a specific controller along the /docs route (documentation will be displayed at http://localhost:5000/api-docs/)
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV !== 'production') {
         app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerOptions_js_1.default));
     }
     //app.use(cors({ origin: '*' }));
@@ -59,15 +59,16 @@ data_source_1.AppDataSource.initialize().then(() => __awaiter(void 0, void 0, vo
     }));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
-    // app.use(express.static(__dirname + '/public'));
-    const uploadsPath = path_1.default.resolve(__dirname, '..', 'uploads');
-    //if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath);
-    const imagesPath = path_1.default.resolve(uploadsPath, 'images');
-    if (!fs_1.default.existsSync(imagesPath)) {
-        fs_1.default.mkdirSync(imagesPath, { recursive: true });
+    if (process.env.NODE_ENV !== 'production') {
+        // app.use(express.static(__dirname + '/public'));
+        const uploadsPath = path_1.default.resolve(__dirname, '..', '..', 'uploads');
+        const imagesPath = path_1.default.resolve(uploadsPath, 'images');
+        if (!fs_1.default.existsSync(imagesPath)) {
+            fs_1.default.mkdirSync(imagesPath, { recursive: true });
+        }
+        app.use("/uploads", express_1.default.static(uploadsPath));
+        app.use("/uploads/images", express_1.default.static(imagesPath));
     }
-    app.use("/uploads", express_1.default.static(uploadsPath));
-    app.use("/uploads/images", express_1.default.static(imagesPath));
     // register express routes from defined application routes
     Routes_1.Routes.forEach(route => {
         const middlewareArray = [];

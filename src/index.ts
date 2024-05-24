@@ -1,7 +1,7 @@
 import  express from "express";
 import swaggerUi from "swagger-ui-express";
 import * as bodyParser from "body-parser";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import  morgan from "morgan";
 import { AppDataSource } from "./data-source";
 import { Routes } from "./routes/Routes";
@@ -14,7 +14,7 @@ import swaggerSpec from './config/swaggerOptions.js';
 
 
 
-function handleError(err, req, res, next) {
+function handleError(err: any, req: Request, res: Response, next: NextFunction) {
   res.status(err.statusCode || 500).send({message: err.message});
 }
 
@@ -27,7 +27,7 @@ AppDataSource.initialize().then(async () => {
     const app = express();
 
     // Add a specific controller along the /docs route (documentation will be displayed at http://localhost:5000/api-docs/)
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV !== 'production') {
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
       }
     //app.use(cors({ origin: '*' }));
@@ -42,12 +42,9 @@ AppDataSource.initialize().then(async () => {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
   
+    if (process.env.NODE_ENV !== 'production') {
     // app.use(express.static(__dirname + '/public'));
-    const uploadsPath = path.resolve(__dirname, '..', 'uploads');
-    
-    
-    //if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath);
-
+    const uploadsPath = path.resolve(__dirname, '..', '..','uploads');
     const imagesPath = path.resolve(uploadsPath, 'images');
    
 
@@ -57,6 +54,7 @@ AppDataSource.initialize().then(async () => {
     
     app.use("/uploads", express.static(uploadsPath));
     app.use("/uploads/images", express.static(imagesPath));
+    }
 
     // register express routes from defined application routes
     Routes.forEach(route => {
